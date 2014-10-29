@@ -1,0 +1,1 @@
+/home/x/textdetect/CMakeFiles/textdetect.dir

@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/x/textdetect/extend.h
+opencv/cv.h
+-
+opencv/highgui.h
+-
+iostream
+-
+
+/home/x/textdetect/region.cpp
+region.h
+/home/x/textdetect/region.h
+cmath
+-
+algorithm
+-
+cassert
+-
+limits
+-
+extend.h
+/home/x/textdetect/extend.h
+
+/home/x/textdetect/region.h
+opencv/cv.h
+-
+opencv/highgui.h
+-
+opencv2/opencv.hpp
+-
+vector
+-
+stdint.h
+-
+
