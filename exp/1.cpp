@@ -96,8 +96,8 @@ int main( int argc, char** argv )
     for (int i=regions.size()-1; i>=0; i--)
     {
       regions[i].extract_features(lab_img, grey, gradient_magnitude);
-      if ( (regions.at(i).stroke_std_/regions.at(i).stroke_mean_ > 0.8) || (regions.at(i).num_holes_>2) || (regions.at(i).bbox_.width <=1) || (regions.at(i).bbox_.height <=3)
-           || (regions.at(i).bbox_.width > 3.5*regions.at(i).bbox_.height))
+      if ( (regions.at(i).stroke_std_/regions.at(i).stroke_mean_ > 0.8) || (regions.at(i).num_holes_>2) || (regions.at(i).bbox_.width <=3) || (regions.at(i).bbox_.height <=3)
+           || (regions.at(i).bbox_.width > 3*regions.at(i).bbox_.height))
         regions.erase(regions.begin()+i);
       else 
         max_stroke = max(max_stroke, regions[i].stroke_mean_);
@@ -109,7 +109,6 @@ int main( int argc, char** argv )
     vector<vector<float> > graph(N, vector<float>(N, 0));
     {
       for (int i=0; i<N; i++){
-        graph[i][i]=100;
         for(int j=i+1; j<N; j++){
           graph[i][j]=graph[j][i]=dist(regions[i], regions[j]);
         }
@@ -143,7 +142,6 @@ int main( int argc, char** argv )
       int dim = dims[f];
       t_float *data = (t_float*)malloc(dim*N * sizeof(t_float));
       int count = 0;
-
       for (int i=0; i<regions.size(); i++)
       {
         data[count] = (t_float)(regions.at(i).bbox_.x+regions.at(i).bbox_.width/2)/img.cols;
@@ -216,67 +214,6 @@ int main( int argc, char** argv )
       free(data);
       meaningful_clusters.clear();
     }
-
-
-
-    {
-        vector<vector<int> > srt;
-        int dim=1;
-        t_float *data = (t_float*)malloc(dim*N * sizeof(t_float));
-        for (int i=0, count=0; i<regions.size(); i++, count+=dim)
-        {
-            Region &r = regions.at(i);
-            //data[count+0] = (t_float)r.bbox_.height*r.stroke_mean_;
-            //data[count+1] = (t_float)regions.at(i).stroke_mean_;
-            //data[count+2] = (t_float)regions.at(i).stroke_std_;
-            //data[count+1] = (t_float)regions.at(i).bbox_.x/pow(img.cols, 0.5);
-            data[count] = (t_float)regions.at(i).bbox_.y/pow(img.rows, 0.5);
-        }
-        mm_clustering(data, N, dim, METHOD_METR_SINGLE, METRIC_SEUCLIDEAN, &meaningful_clusters); // TODO try accumulating more evidence by using different methods and metrics
-        for(int i=0; i<meaningful_clusters.size(); i++){
-            vector<float> scores;
-            vector<int> &s=meaningful_clusters.at(i);
-            for(int j=0; j<s.size(); j++){
-                scores.push_back(regions.at(s[j]).classifier_votes_);
-            }
-            int j=random()%1000;
-            cout<<"group "<<j<<":"<<endl;
-            float f = groupScore(graph, scores, s);
-            if(f>400){
-                srt.push_back(s);
-            }
-//            Mat tmp = Mat::zeros(img.size(), CV_8UC3);
-//            fillRegions(tmp, regions, s);
-//            char buf[100]; sprintf(buf, "out1/%d.group.jpg",  j);
-//            imwrite(buf, tmp);
-        }
-
-        set<int> rs;
-        set<int> ss;
-        vector<int> crt;
-        for(int i=0; i<final_clusters.size(); i++){
-          for(int j=0; j<final_clusters[i].size(); j++){
-            rs.insert(final_clusters[i][j]);
-          }
-        }
-        for(int i=0; i<srt.size(); i++){
-          for(int j=0; j<srt[i].size(); j++){
-            ss.insert(srt[i][j]);
-          }
-        }
-        // cout<<"after insert"<<endl;
-        for(set<int>::iterator it=ss.begin(); it!=ss.end(); it++){
-            int t=*it;
-            if(rs.find(t)!=rs.end()) continue;
-            crt.push_back(*it);
-        }
-        Mat tmp = Mat::zeros(img.size(), CV_8UC3);
-        fillRegions(tmp, regions, crt);
-        char buf[100]; sprintf(buf, "out1/%s.%d.correct0.jpg", argv[1], step);
-        imwrite(buf, tmp);
-        final_clusters.push_back(crt);
-    }
-
     //t = cvGetTickCount() - t;
     //cout << "Clusterings (" << NUM_FEATURES << ") done in " << t/((double)cvGetTickFrequency()*1000.) << " ms." << endl;
     //t = (double)cvGetTickCount();

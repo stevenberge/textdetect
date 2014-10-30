@@ -383,8 +383,13 @@ void Region::extract_features(Mat& _lab_img, Mat& _grey_img, Mat& _gradient_magn
 //        imwrite(buf, bw);
 //    }
 
-    Mat tmp ; //, tmp1 = bw.clone();
+    Mat tmp; //, tmp1=bw.clone(), tmp2_=bw.clone(); //, tmp1 = bw.clone();
     distanceTransform(bw, tmp, CV_DIST_L1, 3); //L1 gives distance in round integers while L2 floats
+//    IplImage a=IplImage(bw), b=IplImage(tmp1), c=IplImage(tmp2_);
+//    cvDistTransform( &a, &b, CV_DIST_L1, CV_DIST_MASK_5, NULL, NULL);
+//    printImg(&b);
+//     distanceTransform(bw, tmp1, CV_DIST_L1, CV_DIST_MASK_5); //L1 gives distance in round integers while L2 floats
+//      printImg(bw, true);
 //    thin2(tmp1);
 
 //    {
