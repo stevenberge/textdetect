@@ -5,6 +5,7 @@ a.out
 segs
 test-textloc
 CMakeCache.txt
+cmake_install.cmake
 *.jpg
 *.png
 test
