@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/x/textdetect/afterline.cpp
+/home/x/desktop/textdetect/afterline.cpp
 opencv/highgui.h
 -
 iostream
@@ -16,21 +16,25 @@ fstream
 stdio.h
 -
 region.h
-/home/x/textdetect/region.h
+/home/x/desktop/textdetect/region.h
 mser.h
-/home/x/textdetect/mser.h
+/home/x/desktop/textdetect/mser.h
 max_meaningful_clustering.h
-/home/x/textdetect/max_meaningful_clustering.h
+/home/x/desktop/textdetect/max_meaningful_clustering.h
 region_classifier.h
-/home/x/textdetect/region_classifier.h
+/home/x/desktop/textdetect/region_classifier.h
 group_classifier.h
-/home/x/textdetect/group_classifier.h
+/home/x/desktop/textdetect/group_classifier.h
 utils.h
-/home/x/textdetect/utils.h
+/home/x/desktop/textdetect/utils.h
 extend.h
-/home/x/textdetect/extend.h
+/home/x/desktop/textdetect/extend.h
 
-/home/x/textdetect/extend.h
+/home/x/desktop/textdetect/extend.cpp
+extend.h
+/home/x/desktop/textdetect/extend.h
+
+/home/x/desktop/textdetect/extend.h
 opencv/cv.h
 -
 opencv/highgui.h
@@ -38,7 +42,7 @@ opencv/highgui.h
 iostream
 -
 
-/home/x/textdetect/fast_clustering.cpp
+/home/x/desktop/textdetect/fast_clustering.cpp
 limits
 -
 float.h
@@ -52,7 +56,11 @@ stdint.h
 cmath
 -
 
-/home/x/textdetect/group_classifier.h
+/home/x/desktop/textdetect/group_classifier.cpp
+group_classifier.h
+/home/x/desktop/textdetect/group_classifier.h
+
+/home/x/desktop/textdetect/group_classifier.h
 opencv/cv.h
 -
 opencv/ml.h
@@ -64,39 +72,71 @@ iostream
 fstream
 -
 region.h
-/home/x/textdetect/region.h
+/home/x/desktop/textdetect/region.h
 region_classifier.h
-/home/x/textdetect/region_classifier.h
+/home/x/desktop/textdetect/region_classifier.h
 
-/home/x/textdetect/max_meaningful_clustering.h
+/home/x/desktop/textdetect/max_meaningful_clustering.cpp
+max_meaningful_clustering.h
+/home/x/desktop/textdetect/max_meaningful_clustering.h
+
+/home/x/desktop/textdetect/max_meaningful_clustering.h
 vector
 -
 fast_clustering.cpp
-/home/x/textdetect/fast_clustering.cpp
+/home/x/desktop/textdetect/fast_clustering.cpp
 nfa.cpp
-/home/x/textdetect/nfa.cpp
+/home/x/desktop/textdetect/nfa.cpp
 min_bounding_box.h
-/home/x/textdetect/min_bounding_box.h
+/home/x/desktop/textdetect/min_bounding_box.h
 
-/home/x/textdetect/min_bounding_box.h
+/home/x/desktop/textdetect/min_bounding_box.cpp
+min_bounding_box.h
+/home/x/desktop/textdetect/min_bounding_box.h
+
+/home/x/desktop/textdetect/min_bounding_box.h
 vector
 -
 
-/home/x/textdetect/mser.h
+/home/x/desktop/textdetect/mser.cpp
+mser.h
+/home/x/desktop/textdetect/mser.h
+algorithm
+-
+cassert
+-
+limits
+-
+
+/home/x/desktop/textdetect/mser.h
 vector
 -
 stdint.h
 -
 region.h
-/home/x/textdetect/region.h
+/home/x/desktop/textdetect/region.h
 
-/home/x/textdetect/nfa.cpp
+/home/x/desktop/textdetect/nfa.cpp
 math.h
 -
 float.h
 -
 
-/home/x/textdetect/region.h
+/home/x/desktop/textdetect/region.cpp
+region.h
+/home/x/desktop/textdetect/region.h
+cmath
+-
+algorithm
+-
+cassert
+-
+limits
+-
+extend.h
+/home/x/desktop/textdetect/extend.h
+
+/home/x/desktop/textdetect/region.h
 opencv/cv.h
 -
 opencv/highgui.h
@@ -108,7 +148,11 @@ vector
 stdint.h
 -
 
-/home/x/textdetect/region_classifier.h
+/home/x/desktop/textdetect/region_classifier.cpp
+region_classifier.h
+/home/x/desktop/textdetect/region_classifier.h
+
+/home/x/desktop/textdetect/region_classifier.h
 opencv/cv.h
 -
 opencv/ml.h
@@ -120,11 +164,11 @@ iostream
 fstream
 -
 region.h
-/home/x/textdetect/region.h
+/home/x/desktop/textdetect/region.h
 
-/home/x/textdetect/utils.h
+/home/x/desktop/textdetect/utils.h
 region.h
-/home/x/textdetect/region.h
+/home/x/desktop/textdetect/region.h
 set
 -
 

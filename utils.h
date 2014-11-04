@@ -511,5 +511,20 @@ void searchIJ(Mat &img,vector<Region> &regions, RegionClassifier &region_boost )
     }
 }
 
+bool contains(Region &a, Region &b){
+    Rect &s=a.bbox_, &t=b.bbox_;
+    return s.x<=t.x && s.y<=t.y && s.x+s.width>=t.x+t.width &&
+            s.y+s.height>=t.y+t.height;
+}
+void unique(vector<Region>& regions, int mid, vector<int> &remain){
+    int n=regions.size();
+    for(int i=0; i<n; i++){
+        int j=0; for(; j<n; j++){
+            if(i>mid&&j>mid || i<=mid&&j<=mid) continue;
+            if(contains(regions[j], regions[i])) break;
+        }
+        if(j==n) remain.push_back(i);
+    }
+}
 
 #endif

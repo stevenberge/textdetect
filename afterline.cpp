@@ -62,7 +62,7 @@ int main( int argc, char** argv )
 
     segmentation = Mat::zeros(img.size(),CV_8UC3);
     all_segmentations = Mat::zeros(240,320*11,CV_8UC3);
-
+    vector<Region> final_regions; int mid=-1;
     for (int step =1; step<3; step++)
     {
 
@@ -367,33 +367,21 @@ int main( int argc, char** argv )
             char buf[100]; sprintf(buf, "out1/%s.%d.correct.jpg", argv[1], step);
             imwrite(buf, tmp);
         }
-
-        drawClusters(segmentation, &regions, &final_clusters);
-
-        if (step == 2)
         {
-            cvtColor(segmentation, grey, CV_BGR2GRAY);
-            threshold(grey,grey,1,255,CV_THRESH_BINARY);
+            final_regions.insert(final_regions.end(), regions.begin(), regions.end());
 
-            char buf[100];
-            ///////
-            sprintf(buf, "out1/%s.out.png", argv[1]);
-            imwrite(buf, grey);
-
-            if (argc > 2)
-            {
-                Mat gt;
-                gt = imread(argv[2]);
-                cvtColor(gt, gt, CV_RGB2GRAY);
-                threshold(gt, gt, 1, 255, CV_THRESH_BINARY_INV); // <- for KAIST gt
-                //threshold(gt, gt, 254, 255, CV_THRESH_BINARY); // <- for ICDAR gt
-                Mat tmp_mask = (255-gt) & (grey);
-                cout << "Pixel level recall = " << (float)countNonZero(tmp_mask) / countNonZero(255-gt) << endl;
-                cout << "Pixel level precission = " << (float)countNonZero(tmp_mask) / countNonZero(grey) << endl;
+            if(step==1) mid = regions.size()-1;
+            else{
+                vector<int> remain;
+                char buf[100];
+                sprintf(buf, "out1/%s.out.png", argv[1]);
+                unique(final_regions, mid, remain);
+                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+                fillRegions(tmp, final_regions, remain);
+                imwrite(buf, tmp);
             }
+
         }
-
-
         regions.clear();
         //t_tot = cvGetTickCount() - t_tot;
         //cout << " Total processing for one frame " << t_tot/((double)cvGetTickFrequency()*1000.) << " ms." << endl;

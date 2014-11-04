@@ -6,6 +6,7 @@ using namespace cv;
 
 int main(int argc, char **argv){
   char *of=argv[0], *gt=argv[1];
+  cout<<of<<endl<<gt<<endl;
   Mat a=imread(of), b=imread(gt);
   Mat c = a & b;
   cout<<of<<endl;

@@ -1,1 +1,1 @@
-/home/x/textdetect/CMakeFiles/textdetect.dir
+/home/x/desktop/textdetect/CMakeFiles/textdetect.dir
