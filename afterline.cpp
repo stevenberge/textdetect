@@ -252,7 +252,7 @@ int main( int argc, char** argv )
                     scores.push_back(regions.at(s[j]).classifier_votes_);
                 }
                 int j=random()%1000;
-                cout<<"group "<<j<<":"<<endl;
+                //cout<<"group "<<j<<":"<<endl;
                 float f = groupScore(graph, scores, s);
                 if(f>400){
                     srt.push_back(s);

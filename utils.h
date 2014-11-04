@@ -239,9 +239,9 @@ void fillRegions(Mat& img, vector<Region> &regions,vector<int> &group)
       int i=group[l];
       for (int p=0; p<regions[i].pixels_.size(); p++)
         {
-          rsptr[regions[i].pixels_.at(p)*3] = 255;
-          rsptr[regions[i].pixels_.at(p)*3+1] = 255;//bcolors[i%9][2];
-          rsptr[regions[i].pixels_.at(p)*3+2] =255;// bcolors[i%9][2];
+          rsptr[regions[i].pixels_.at(p)] = 255;
+      //    rsptr[regions[i].pixels_.at(p)*3+1] = 255;//bcolors[i%9][2];
+      //    rsptr[regions[i].pixels_.at(p)*3+2] =255;// bcolors[i%9][2];
         }
     }
 }

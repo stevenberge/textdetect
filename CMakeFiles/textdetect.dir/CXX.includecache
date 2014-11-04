@@ -30,10 +30,6 @@ utils.h
 extend.h
 /home/x/desktop/textdetect/extend.h
 
-/home/x/desktop/textdetect/extend.cpp
-extend.h
-/home/x/desktop/textdetect/extend.h
-
 /home/x/desktop/textdetect/extend.h
 opencv/cv.h
 -
@@ -56,10 +52,6 @@ stdint.h
 cmath
 -
 
-/home/x/desktop/textdetect/group_classifier.cpp
-group_classifier.h
-/home/x/desktop/textdetect/group_classifier.h
-
 /home/x/desktop/textdetect/group_classifier.h
 opencv/cv.h
 -
@@ -76,10 +68,6 @@ region.h
 region_classifier.h
 /home/x/desktop/textdetect/region_classifier.h
 
-/home/x/desktop/textdetect/max_meaningful_clustering.cpp
-max_meaningful_clustering.h
-/home/x/desktop/textdetect/max_meaningful_clustering.h
-
 /home/x/desktop/textdetect/max_meaningful_clustering.h
 vector
 -
@@ -90,22 +78,8 @@ nfa.cpp
 min_bounding_box.h
 /home/x/desktop/textdetect/min_bounding_box.h
 
-/home/x/desktop/textdetect/min_bounding_box.cpp
-min_bounding_box.h
-/home/x/desktop/textdetect/min_bounding_box.h
-
 /home/x/desktop/textdetect/min_bounding_box.h
 vector
--
-
-/home/x/desktop/textdetect/mser.cpp
-mser.h
-/home/x/desktop/textdetect/mser.h
-algorithm
--
-cassert
--
-limits
 -
 
 /home/x/desktop/textdetect/mser.h
@@ -122,20 +96,6 @@ math.h
 float.h
 -
 
-/home/x/desktop/textdetect/region.cpp
-region.h
-/home/x/desktop/textdetect/region.h
-cmath
--
-algorithm
--
-cassert
--
-limits
--
-extend.h
-/home/x/desktop/textdetect/extend.h
-
 /home/x/desktop/textdetect/region.h
 opencv/cv.h
 -
@@ -147,10 +107,6 @@ vector
 -
 stdint.h
 -
-
-/home/x/desktop/textdetect/region_classifier.cpp
-region_classifier.h
-/home/x/desktop/textdetect/region_classifier.h
 
 /home/x/desktop/textdetect/region_classifier.h
 opencv/cv.h
