@@ -3,3 +3,6 @@ out
 out1
 segs
 test-textloc
+CMakeCache.txt
+*.jpg
+*.png
