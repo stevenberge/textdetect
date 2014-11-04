@@ -7,9 +7,9 @@ SET(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 # The top level Makefile was generated from the following files:
 SET(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
-  "CMakeFiles/2.8.11.2/CMakeCCompiler.cmake"
-  "CMakeFiles/2.8.11.2/CMakeCXXCompiler.cmake"
-  "CMakeFiles/2.8.11.2/CMakeSystem.cmake"
+  "CMakeFiles/CMakeCCompiler.cmake"
+  "CMakeFiles/CMakeCXXCompiler.cmake"
+  "CMakeFiles/CMakeSystem.cmake"
   "CMakeLists.txt"
   "/usr/share/OpenCV/OpenCVConfig-version.cmake"
   "/usr/share/OpenCV/OpenCVConfig.cmake"
@@ -23,7 +23,6 @@ SET(CMAKE_MAKEFILE_DEPENDS
   "/usr/share/cmake-2.8/Modules/CMakeCommonLanguageInclude.cmake"
   "/usr/share/cmake-2.8/Modules/CMakeDetermineCCompiler.cmake"
   "/usr/share/cmake-2.8/Modules/CMakeDetermineCXXCompiler.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeDetermineCompiler.cmake"
   "/usr/share/cmake-2.8/Modules/CMakeDetermineCompilerABI.cmake"
   "/usr/share/cmake-2.8/Modules/CMakeDetermineCompilerId.cmake"
   "/usr/share/cmake-2.8/Modules/CMakeDetermineSystem.cmake"
@@ -39,7 +38,6 @@ SET(CMAKE_MAKEFILE_DEPENDS
   "/usr/share/cmake-2.8/Modules/Compiler/GNU-C.cmake"
   "/usr/share/cmake-2.8/Modules/Compiler/GNU-CXX.cmake"
   "/usr/share/cmake-2.8/Modules/Compiler/GNU.cmake"
-  "/usr/share/cmake-2.8/Modules/Platform/Linux-CXX.cmake"
   "/usr/share/cmake-2.8/Modules/Platform/Linux-GNU-C.cmake"
   "/usr/share/cmake-2.8/Modules/Platform/Linux-GNU-CXX.cmake"
   "/usr/share/cmake-2.8/Modules/Platform/Linux-GNU.cmake"

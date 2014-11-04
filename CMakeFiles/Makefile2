@@ -47,10 +47,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/x/desktop/textdetect
+CMAKE_SOURCE_DIR = /home/x/textdetect
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/x/desktop/textdetect
+CMAKE_BINARY_DIR = /home/x/textdetect
 
 #=============================================================================
 # Target rules for target CMakeFiles/textdetect.dir
@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = /home/x/desktop/textdetect
 CMakeFiles/textdetect.dir/all:
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/depend
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/desktop/textdetect/CMakeFiles  1 2 3 4 5 6 7 8 9 10
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles  1 2 3 4 5 6 7 8 9 10
 	@echo "Built target textdetect"
 .PHONY : CMakeFiles/textdetect.dir/all
 
@@ -69,9 +69,9 @@ all: CMakeFiles/textdetect.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/textdetect.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/x/desktop/textdetect/CMakeFiles 10
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/x/textdetect/CMakeFiles 10
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/textdetect.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/x/desktop/textdetect/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/x/textdetect/CMakeFiles 0
 .PHONY : CMakeFiles/textdetect.dir/rule
 
 # Convenience name for target.

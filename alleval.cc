@@ -2,17 +2,18 @@
 using namespace std;
 
 int main(){
-  char buf[1000];
-  int a, b, c;
-  int a_=0, b_=0, c_=0;
-  while(cin>>buf){
-    if(buf[0]==0) break;
-    cin>>a>>b>>c;//c is the gt pixel cnt
-    a_+=a, b_+=b, c_+=c;
-  }
-  float r=(float)a_/c_, p=(float)a_/b_;
-  cout<<"recall:"<<r<<endl;
-  cout<<"precision:"<<p<<endl;
-  cout<<"f:"<<(2*r*p)/(r+p)<<endl;
-  return 0;
+	int a, b, c;
+	int a_ = 0, b_ = 0, c_ = 0;
+  float r, p;
+	char buf[100];
+	while(cin >> buf){
+		if ( !buf[0] ) break;
+		// cout << " add " << buf << endl;
+		cin >> a >> b >> c >> r >> p;
+		a_ += a, b_ += b, c_ += c;
+	}
+	cout << a_ << ":"<< b_ << ":" << c_ << endl;
+	cout << " recall: " << (float)a_ / b_ << endl;
+	cout << " precision: " << (float)a_ / c_ << endl;
+	return 0;
 }

@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/x/desktop/textdetect
+CMAKE_SOURCE_DIR = /home/x/textdetect
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/x/desktop/textdetect
+CMAKE_BINARY_DIR = /home/x/textdetect
 
 # Include any dependencies generated for this target.
 include CMakeFiles/textdetect.dir/depend.make
@@ -51,17 +51,17 @@ include CMakeFiles/textdetect.dir/flags.make
 
 CMakeFiles/textdetect.dir/extend.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/extend.cpp.o: extend.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/desktop/textdetect/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/extend.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/extend.cpp.o -c /home/x/desktop/textdetect/extend.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/extend.cpp.o -c /home/x/textdetect/extend.cpp
 
 CMakeFiles/textdetect.dir/extend.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/textdetect.dir/extend.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/desktop/textdetect/extend.cpp > CMakeFiles/textdetect.dir/extend.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/textdetect/extend.cpp > CMakeFiles/textdetect.dir/extend.cpp.i
 
 CMakeFiles/textdetect.dir/extend.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/textdetect.dir/extend.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/desktop/textdetect/extend.cpp -o CMakeFiles/textdetect.dir/extend.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/textdetect/extend.cpp -o CMakeFiles/textdetect.dir/extend.cpp.s
 
 CMakeFiles/textdetect.dir/extend.cpp.o.requires:
 .PHONY : CMakeFiles/textdetect.dir/extend.cpp.o.requires
@@ -74,17 +74,17 @@ CMakeFiles/textdetect.dir/extend.cpp.o.provides.build: CMakeFiles/textdetect.dir
 
 CMakeFiles/textdetect.dir/fast_clustering.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/fast_clustering.cpp.o: fast_clustering.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/desktop/textdetect/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/fast_clustering.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/fast_clustering.cpp.o -c /home/x/desktop/textdetect/fast_clustering.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/fast_clustering.cpp.o -c /home/x/textdetect/fast_clustering.cpp
 
 CMakeFiles/textdetect.dir/fast_clustering.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/textdetect.dir/fast_clustering.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/desktop/textdetect/fast_clustering.cpp > CMakeFiles/textdetect.dir/fast_clustering.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/textdetect/fast_clustering.cpp > CMakeFiles/textdetect.dir/fast_clustering.cpp.i
 
 CMakeFiles/textdetect.dir/fast_clustering.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/textdetect.dir/fast_clustering.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/desktop/textdetect/fast_clustering.cpp -o CMakeFiles/textdetect.dir/fast_clustering.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/textdetect/fast_clustering.cpp -o CMakeFiles/textdetect.dir/fast_clustering.cpp.s
 
 CMakeFiles/textdetect.dir/fast_clustering.cpp.o.requires:
 .PHONY : CMakeFiles/textdetect.dir/fast_clustering.cpp.o.requires
@@ -97,17 +97,17 @@ CMakeFiles/textdetect.dir/fast_clustering.cpp.o.provides.build: CMakeFiles/textd
 
 CMakeFiles/textdetect.dir/group_classifier.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/group_classifier.cpp.o: group_classifier.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/desktop/textdetect/CMakeFiles $(CMAKE_PROGRESS_3)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/group_classifier.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/group_classifier.cpp.o -c /home/x/desktop/textdetect/group_classifier.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/group_classifier.cpp.o -c /home/x/textdetect/group_classifier.cpp
 
 CMakeFiles/textdetect.dir/group_classifier.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/textdetect.dir/group_classifier.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/desktop/textdetect/group_classifier.cpp > CMakeFiles/textdetect.dir/group_classifier.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/textdetect/group_classifier.cpp > CMakeFiles/textdetect.dir/group_classifier.cpp.i
 
 CMakeFiles/textdetect.dir/group_classifier.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/textdetect.dir/group_classifier.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/desktop/textdetect/group_classifier.cpp -o CMakeFiles/textdetect.dir/group_classifier.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/textdetect/group_classifier.cpp -o CMakeFiles/textdetect.dir/group_classifier.cpp.s
 
 CMakeFiles/textdetect.dir/group_classifier.cpp.o.requires:
 .PHONY : CMakeFiles/textdetect.dir/group_classifier.cpp.o.requires
@@ -120,17 +120,17 @@ CMakeFiles/textdetect.dir/group_classifier.cpp.o.provides.build: CMakeFiles/text
 
 CMakeFiles/textdetect.dir/afterline.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/afterline.cpp.o: afterline.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/desktop/textdetect/CMakeFiles $(CMAKE_PROGRESS_4)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_4)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/afterline.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/afterline.cpp.o -c /home/x/desktop/textdetect/afterline.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/afterline.cpp.o -c /home/x/textdetect/afterline.cpp
 
 CMakeFiles/textdetect.dir/afterline.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/textdetect.dir/afterline.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/desktop/textdetect/afterline.cpp > CMakeFiles/textdetect.dir/afterline.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/textdetect/afterline.cpp > CMakeFiles/textdetect.dir/afterline.cpp.i
 
 CMakeFiles/textdetect.dir/afterline.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/textdetect.dir/afterline.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/desktop/textdetect/afterline.cpp -o CMakeFiles/textdetect.dir/afterline.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/textdetect/afterline.cpp -o CMakeFiles/textdetect.dir/afterline.cpp.s
 
 CMakeFiles/textdetect.dir/afterline.cpp.o.requires:
 .PHONY : CMakeFiles/textdetect.dir/afterline.cpp.o.requires
@@ -143,17 +143,17 @@ CMakeFiles/textdetect.dir/afterline.cpp.o.provides.build: CMakeFiles/textdetect.
 
 CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.o: max_meaningful_clustering.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/desktop/textdetect/CMakeFiles $(CMAKE_PROGRESS_5)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_5)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.o -c /home/x/desktop/textdetect/max_meaningful_clustering.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.o -c /home/x/textdetect/max_meaningful_clustering.cpp
 
 CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/desktop/textdetect/max_meaningful_clustering.cpp > CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/textdetect/max_meaningful_clustering.cpp > CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.i
 
 CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/desktop/textdetect/max_meaningful_clustering.cpp -o CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/textdetect/max_meaningful_clustering.cpp -o CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.s
 
 CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.o.requires:
 .PHONY : CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.o.requires
@@ -166,17 +166,17 @@ CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.o.provides.build: CMakeF
 
 CMakeFiles/textdetect.dir/min_bounding_box.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/min_bounding_box.cpp.o: min_bounding_box.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/desktop/textdetect/CMakeFiles $(CMAKE_PROGRESS_6)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_6)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/min_bounding_box.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/min_bounding_box.cpp.o -c /home/x/desktop/textdetect/min_bounding_box.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/min_bounding_box.cpp.o -c /home/x/textdetect/min_bounding_box.cpp
 
 CMakeFiles/textdetect.dir/min_bounding_box.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/textdetect.dir/min_bounding_box.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/desktop/textdetect/min_bounding_box.cpp > CMakeFiles/textdetect.dir/min_bounding_box.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/textdetect/min_bounding_box.cpp > CMakeFiles/textdetect.dir/min_bounding_box.cpp.i
 
 CMakeFiles/textdetect.dir/min_bounding_box.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/textdetect.dir/min_bounding_box.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/desktop/textdetect/min_bounding_box.cpp -o CMakeFiles/textdetect.dir/min_bounding_box.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/textdetect/min_bounding_box.cpp -o CMakeFiles/textdetect.dir/min_bounding_box.cpp.s
 
 CMakeFiles/textdetect.dir/min_bounding_box.cpp.o.requires:
 .PHONY : CMakeFiles/textdetect.dir/min_bounding_box.cpp.o.requires
@@ -189,17 +189,17 @@ CMakeFiles/textdetect.dir/min_bounding_box.cpp.o.provides.build: CMakeFiles/text
 
 CMakeFiles/textdetect.dir/mser.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/mser.cpp.o: mser.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/desktop/textdetect/CMakeFiles $(CMAKE_PROGRESS_7)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_7)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/mser.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/mser.cpp.o -c /home/x/desktop/textdetect/mser.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/mser.cpp.o -c /home/x/textdetect/mser.cpp
 
 CMakeFiles/textdetect.dir/mser.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/textdetect.dir/mser.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/desktop/textdetect/mser.cpp > CMakeFiles/textdetect.dir/mser.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/textdetect/mser.cpp > CMakeFiles/textdetect.dir/mser.cpp.i
 
 CMakeFiles/textdetect.dir/mser.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/textdetect.dir/mser.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/desktop/textdetect/mser.cpp -o CMakeFiles/textdetect.dir/mser.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/textdetect/mser.cpp -o CMakeFiles/textdetect.dir/mser.cpp.s
 
 CMakeFiles/textdetect.dir/mser.cpp.o.requires:
 .PHONY : CMakeFiles/textdetect.dir/mser.cpp.o.requires
@@ -212,17 +212,17 @@ CMakeFiles/textdetect.dir/mser.cpp.o.provides.build: CMakeFiles/textdetect.dir/m
 
 CMakeFiles/textdetect.dir/nfa.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/nfa.cpp.o: nfa.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/desktop/textdetect/CMakeFiles $(CMAKE_PROGRESS_8)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_8)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/nfa.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/nfa.cpp.o -c /home/x/desktop/textdetect/nfa.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/nfa.cpp.o -c /home/x/textdetect/nfa.cpp
 
 CMakeFiles/textdetect.dir/nfa.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/textdetect.dir/nfa.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/desktop/textdetect/nfa.cpp > CMakeFiles/textdetect.dir/nfa.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/textdetect/nfa.cpp > CMakeFiles/textdetect.dir/nfa.cpp.i
 
 CMakeFiles/textdetect.dir/nfa.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/textdetect.dir/nfa.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/desktop/textdetect/nfa.cpp -o CMakeFiles/textdetect.dir/nfa.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/textdetect/nfa.cpp -o CMakeFiles/textdetect.dir/nfa.cpp.s
 
 CMakeFiles/textdetect.dir/nfa.cpp.o.requires:
 .PHONY : CMakeFiles/textdetect.dir/nfa.cpp.o.requires
@@ -235,17 +235,17 @@ CMakeFiles/textdetect.dir/nfa.cpp.o.provides.build: CMakeFiles/textdetect.dir/nf
 
 CMakeFiles/textdetect.dir/region_classifier.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/region_classifier.cpp.o: region_classifier.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/desktop/textdetect/CMakeFiles $(CMAKE_PROGRESS_9)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_9)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/region_classifier.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/region_classifier.cpp.o -c /home/x/desktop/textdetect/region_classifier.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/region_classifier.cpp.o -c /home/x/textdetect/region_classifier.cpp
 
 CMakeFiles/textdetect.dir/region_classifier.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/textdetect.dir/region_classifier.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/desktop/textdetect/region_classifier.cpp > CMakeFiles/textdetect.dir/region_classifier.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/textdetect/region_classifier.cpp > CMakeFiles/textdetect.dir/region_classifier.cpp.i
 
 CMakeFiles/textdetect.dir/region_classifier.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/textdetect.dir/region_classifier.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/desktop/textdetect/region_classifier.cpp -o CMakeFiles/textdetect.dir/region_classifier.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/textdetect/region_classifier.cpp -o CMakeFiles/textdetect.dir/region_classifier.cpp.s
 
 CMakeFiles/textdetect.dir/region_classifier.cpp.o.requires:
 .PHONY : CMakeFiles/textdetect.dir/region_classifier.cpp.o.requires
@@ -258,17 +258,17 @@ CMakeFiles/textdetect.dir/region_classifier.cpp.o.provides.build: CMakeFiles/tex
 
 CMakeFiles/textdetect.dir/region.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/region.cpp.o: region.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/desktop/textdetect/CMakeFiles $(CMAKE_PROGRESS_10)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_10)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/region.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/region.cpp.o -c /home/x/desktop/textdetect/region.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/region.cpp.o -c /home/x/textdetect/region.cpp
 
 CMakeFiles/textdetect.dir/region.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/textdetect.dir/region.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/desktop/textdetect/region.cpp > CMakeFiles/textdetect.dir/region.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/textdetect/region.cpp > CMakeFiles/textdetect.dir/region.cpp.i
 
 CMakeFiles/textdetect.dir/region.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/textdetect.dir/region.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/desktop/textdetect/region.cpp -o CMakeFiles/textdetect.dir/region.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/textdetect/region.cpp -o CMakeFiles/textdetect.dir/region.cpp.s
 
 CMakeFiles/textdetect.dir/region.cpp.o.requires:
 .PHONY : CMakeFiles/textdetect.dir/region.cpp.o.requires
@@ -306,24 +306,6 @@ textdetect: CMakeFiles/textdetect.dir/nfa.cpp.o
 textdetect: CMakeFiles/textdetect.dir/region_classifier.cpp.o
 textdetect: CMakeFiles/textdetect.dir/region.cpp.o
 textdetect: CMakeFiles/textdetect.dir/build.make
-textdetect: /usr/lib/libopencv_calib3d.so
-textdetect: /usr/lib/libopencv_contrib.so
-textdetect: /usr/lib/libopencv_core.so
-textdetect: /usr/lib/libopencv_features2d.so
-textdetect: /usr/lib/libopencv_flann.so
-textdetect: /usr/lib/libopencv_gpu.so
-textdetect: /usr/lib/libopencv_highgui.so
-textdetect: /usr/lib/libopencv_imgproc.so
-textdetect: /usr/lib/libopencv_legacy.so
-textdetect: /usr/lib/libopencv_ml.so
-textdetect: /usr/lib/libopencv_objdetect.so
-textdetect: /usr/lib/libopencv_ocl.so
-textdetect: /usr/lib/libopencv_photo.so
-textdetect: /usr/lib/libopencv_stitching.so
-textdetect: /usr/lib/libopencv_superres.so
-textdetect: /usr/lib/libopencv_ts.so
-textdetect: /usr/lib/libopencv_video.so
-textdetect: /usr/lib/libopencv_videostab.so
 textdetect: CMakeFiles/textdetect.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable textdetect"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/textdetect.dir/link.txt --verbose=$(VERBOSE)
@@ -349,6 +331,6 @@ CMakeFiles/textdetect.dir/clean:
 .PHONY : CMakeFiles/textdetect.dir/clean
 
 CMakeFiles/textdetect.dir/depend:
-	cd /home/x/desktop/textdetect && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/x/desktop/textdetect /home/x/desktop/textdetect /home/x/desktop/textdetect /home/x/desktop/textdetect /home/x/desktop/textdetect/CMakeFiles/textdetect.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/x/textdetect && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/x/textdetect /home/x/textdetect /home/x/textdetect /home/x/textdetect /home/x/textdetect/CMakeFiles/textdetect.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/textdetect.dir/depend
 

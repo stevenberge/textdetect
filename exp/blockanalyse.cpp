@@ -95,27 +95,14 @@ int main( int argc, char** argv )
     //t = (double)cvGetTickCount();
 
     double max_stroke = 0;
-    vector<Region> erased;
     for (int i=regions.size()-1; i>=0; i--)
     {
-      Region &r=regions.at(i);
-      r.extract_features(lab_img, grey, gradient_magnitude);  //|| (r.bbox_.width <=1)
-      if ( (r.stroke_std_/r.stroke_mean_ > 0.8) || (r.num_holes_>2)  || (r.bbox_.height <=2)
-           || (r.bbox_.width > 3.5*r.bbox_.height) || r.stroke_std_>0.1*r.bbox_.height ){
-        if(r.stroke_std_>0.1*r.bbox_.height)   {
-          erased.push_back(r);
-          //cout<<"mean width:"<<r.stroke_mean_<<" std width:"<<r.stroke_std_<<" width var"<<r.stroke_var_<<" region height:"<<r.bbox_.height<<endl;
-        }
+      regions[i].extract_features(lab_img, grey, gradient_magnitude);  //|| (regions.at(i).bbox_.width <=1)
+      if ( (regions.at(i).stroke_std_/regions.at(i).stroke_mean_ > 0.8) || (regions.at(i).num_holes_>2)  || (regions.at(i).bbox_.height <=2)
+           || (regions.at(i).bbox_.width > 3.5*regions.at(i).bbox_.height))
         regions.erase(regions.begin()+i);
-      }
       else 
         max_stroke = max(max_stroke, regions[i].stroke_mean_);
-    }
-    {
-      Mat tmp = Mat::zeros(img.size(), CV_8UC3);
-      drawMSERs(tmp, &erased, true, &img, true);
-      char buf[100]; sprintf(buf, "out1/%s.%d.erased.jpg", argv[1], step);
-      imwrite(buf, tmp);
     }
 
  /////////
@@ -260,10 +247,10 @@ int main( int argc, char** argv )
             if(f>400){
                 srt.push_back(s);
             }
-            Mat tmp = Mat::zeros(img.size(), CV_8UC3);
-            fillRegions(tmp, regions, s);
-            char buf[100]; sprintf(buf, "out1/%d.group.jpg",  j);
-            imwrite(buf, tmp);
+//            Mat tmp = Mat::zeros(img.size(), CV_8UC3);
+//            fillRegions(tmp, regions, s);
+//            char buf[100]; sprintf(buf, "out1/%d.group.jpg",  j);
+//            imwrite(buf, tmp);
         }
 
         set<int> rs;
