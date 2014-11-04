@@ -306,6 +306,24 @@ textdetect: CMakeFiles/textdetect.dir/nfa.cpp.o
 textdetect: CMakeFiles/textdetect.dir/region_classifier.cpp.o
 textdetect: CMakeFiles/textdetect.dir/region.cpp.o
 textdetect: CMakeFiles/textdetect.dir/build.make
+textdetect: /usr/lib/libopencv_calib3d.so
+textdetect: /usr/lib/libopencv_contrib.so
+textdetect: /usr/lib/libopencv_core.so
+textdetect: /usr/lib/libopencv_features2d.so
+textdetect: /usr/lib/libopencv_flann.so
+textdetect: /usr/lib/libopencv_gpu.so
+textdetect: /usr/lib/libopencv_highgui.so
+textdetect: /usr/lib/libopencv_imgproc.so
+textdetect: /usr/lib/libopencv_legacy.so
+textdetect: /usr/lib/libopencv_ml.so
+textdetect: /usr/lib/libopencv_objdetect.so
+textdetect: /usr/lib/libopencv_ocl.so
+textdetect: /usr/lib/libopencv_photo.so
+textdetect: /usr/lib/libopencv_stitching.so
+textdetect: /usr/lib/libopencv_superres.so
+textdetect: /usr/lib/libopencv_ts.so
+textdetect: /usr/lib/libopencv_video.so
+textdetect: /usr/lib/libopencv_videostab.so
 textdetect: CMakeFiles/textdetect.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable textdetect"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/textdetect.dir/link.txt --verbose=$(VERBOSE)
