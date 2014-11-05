@@ -366,7 +366,7 @@ float groupScore(vector<vector<float> > &graph, vector<float> &scores, vector<in
 //        ti*=tn;
         t+=tn;
     }
-    float s = t/pow(N, 0.3);
+    float s = t/pow(N, 0.7);
    //cout<<"sum:"<<t<<" sim:"<<s<<endl;
     return s;
 }

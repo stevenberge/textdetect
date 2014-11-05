@@ -527,4 +527,19 @@ void unique(vector<Region>& regions, int mid, vector<int> &remain){
     }
 }
 
+float groupVar(vector<Region> &regions, vector<int> & group){
+  float stroke_mean=0, stroke_var=0, stroke_var1=0;
+  for(int i=0; i<group.size(); i++){
+    int k=group[i];
+    stroke_mean+=regions[k].stroke_mean_;
+  }
+  stroke_mean/=group.size();
+  cout<<"stroke_mean:"<<stroke_mean<<endl;
+  for(int i=0; i<group.size(); i++){
+    int k=group[i];
+    stroke_var+=regions[k].stroke_var_;
+    stroke_var1+=pow(regions[k].stroke_mean_-stroke_mean, 2);
+  }
+  return (stroke_var1/group.size()+stroke_var)/stroke_mean;
+}
 #endif
