@@ -12,6 +12,10 @@ int main(int argc, char **argv){
   // cout<<a.channels()<<":"<<b.channels()<<endl;
   Mat c = a & b;
   cout<<of<<endl;
-  cout<<countNonZero(c)<<" "<<countNonZero(a)<<" "<<countNonZero(b)<<endl;
+  float cc = countNonZero(c), ca = countNonZero(a), cb = countNonZero(b);
+  ca = ca > 0 ? ca : 1;
+  cb = cb > 0 ? cb : 1;
+  cout << cc << " " << cb << " " << ca <<
+    " " << (cc/cb) << " " << (cc/ca) << endl;
   return 0;
 }

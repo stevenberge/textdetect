@@ -534,7 +534,7 @@ float groupVar(vector<Region> &regions, vector<int> & group){
     stroke_mean+=regions[k].stroke_mean_;
   }
   stroke_mean/=group.size();
-  cout<<"stroke_mean:"<<stroke_mean<<endl;
+  //cout<<"stroke_mean:"<<stroke_mean<<endl;
   for(int i=0; i<group.size(); i++){
     int k=group[i];
     stroke_var+=regions[k].stroke_var_;
