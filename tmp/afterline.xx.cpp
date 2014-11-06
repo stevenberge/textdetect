@@ -54,25 +54,25 @@ inline float dist(Region &a, Region &b){
   return  100/(d*f1*f2+1);
 }
 void dfs0(const vector<vector<bool> > &sameline, const set<int> &block, vector<int> &line, int v, vector<bool> & vis){
-     int N=vis.size();
-     line.push_back(v);
-     vis[v]=true;
-     for(int i=0; i<N; i++){
-         if(!vis[i] && block.count(i) && sameline[v][i] ){
-             dfs0(sameline, block, line, i, vis);
-         }
-     }
- }
+  int N=vis.size();
+  line.push_back(v);
+  vis[v]=true;
+  for(int i=0; i<N; i++){
+    if(!vis[i] && block.count(i) && sameline[v][i] ){
+      dfs0(sameline, block, line, i, vis);
+    }
+  }
+}
 void dfs(const vector<vector<float> > &graph, const float thres, vector<int> &tmp, int v, vector<bool> & vis){
-     int N=vis.size();
-     tmp.push_back(v);
-     vis[v]=true;
-     for(int i=0; i<N; i++){
-         if(!vis[i] && graph[v][i]>thres){
-             dfs(graph, thres, tmp, i, vis);
-         }
-     }
- }
+  int N=vis.size();
+  tmp.push_back(v);
+  vis[v]=true;
+  for(int i=0; i<N; i++){
+    if(!vis[i] && graph[v][i]>thres){
+      dfs(graph, thres, tmp, i, vis);
+    }
+  }
+}
 void cutToLines(const vector<vector<bool> > &sameline, const vector<int> &block, vector<vector<int> > &lines){
   int N = block.size(), M=sameline.size();
   set<int> tt;
@@ -88,6 +88,16 @@ void cutToLines(const vector<vector<bool> > &sameline, const vector<int> &block,
     }
   }
 }
+bool validateBlock(vector<Region> &regions, vector<vector<float> > &graph, vector<int> &s, GroupClassifier &group_boost , int num=0){
+  float f = groupScore(graph,  s);
+  float g = groupVar(regions, s);
+  float h= group_boost(&s, &regions)/ DECISION_THRESHOLD_SF;
+  cout<<"group"<<num<<":"<<f<<endl;
+  cout<<"var:"<<g<<endl;
+  bool tag = (f>=200 && g<=0.015 && h>=0.1 || f>700 && g<=0.1);
+  if(tag) cout<<" is text block ................."<<endl;
+  return tag;
+}
 
 int main( int argc, char** argv )
 {
@@ -102,6 +112,10 @@ int main( int argc, char** argv )
   GroupClassifier  group_boost("boost_train/trained_boost_groups.xml", &region_boost); 
 
   img = imread(argv[1]);
+
+  bool debug=false;
+  if(argc>2) debug=true;
+
   cvtColor(img, grey, CV_BGR2GRAY);
   cvtColor(img, lab_img, CV_BGR2Lab);
   gradient_magnitude = Mat_<double>(img.size());
@@ -148,7 +162,7 @@ int main( int argc, char** argv )
       Region &r=regions.at(i);
       r.extract_features(lab_img, grey, gradient_magnitude);  //|| (r.bbox_.width <=1)
       if ( (r.stroke_std_/r.stroke_mean_ > 0.8) || (r.num_holes_>2)  || (r.bbox_.height <=2)
-           || (r.bbox_.width > 3.5*r.bbox_.height) || r.stroke_std_>0.1*r.bbox_.height ){
+          || (r.bbox_.width > 3.5*r.bbox_.height) || r.stroke_std_>0.1*r.bbox_.height ){
         if(r.stroke_std_>0.1*r.bbox_.height)   {
           erased.push_back(r);
           //cout<<"mean width:"<<r.stroke_mean_<<" std width:"<<r.stroke_std_<<" width var"<<r.stroke_var_<<" region height:"<<r.bbox_.height<<endl;
@@ -170,7 +184,7 @@ int main( int argc, char** argv )
       char buf[100]; sprintf(buf, "out1/%s.%d.mser.jpg", argv[1], step);
       imwrite(buf, tmp);
     }
- /////////
+    /////////
     cout<<"calculate graph"<<endl;
     int N = regions.size();
     vector<vector<float> > graph(N, vector<float>(N, 0));
@@ -192,38 +206,35 @@ int main( int argc, char** argv )
 
     vector<vector<int> > final_clusters;
     vector<vector<int> > blocks;
-    vector<bool> blockTag; 
     {
-        //divide into connected tree
-        float thres=20;
-        vector<bool> vis(N, false);
-        for(int i=0; i<N; i++){
-            if(!vis[i]){
-                vector<int> tmp;
-                dfs(graph, thres, tmp, i, vis);
-                blocks.push_back(tmp);
-            }
+      //divide into connected tree
+      float thres=20;
+      vector<bool> vis(N, false);
+      for(int i=0; i<N; i++){
+        if(!vis[i]){
+          vector<int> tmp;
+          dfs(graph, thres, tmp, i, vis);
+          blocks.push_back(tmp);
         }
+      }
 
-        Mat tmp = Mat::zeros(img.size(), CV_8UC3);
-        drawClusters(tmp, &regions, &blocks);
-        char buf[100];
-        sprintf(buf, "out1/%s.%d.cluster.jpg", argv[1], step);
-        imwrite(buf, tmp);
-      
-        blockTag.resize(blocks.size(), false);
-        for(int j=0; j<blocks.size(); j++){
-          if ( (group_boost(&blocks.at(j), &regions) >= DECISION_THRESHOLD_SF) )
-          {
-            final_clusters.push_back(blocks[j]);
-            blockTag[j]=true;
-          }
+      Mat tmp = Mat::zeros(img.size(), CV_8UC3);
+      drawClusters(tmp, &regions, &blocks);
+      char buf[100];
+      sprintf(buf, "out1/%s.%d.cluster.jpg", argv[1], step);
+      imwrite(buf, tmp);
+
+      for(int j=0; j<blocks.size(); j++){
+        if ( (group_boost(&blocks.at(j), &regions) >= DECISION_THRESHOLD_SF) )
+        {
+          final_clusters.push_back(blocks[j]);
         }
+      }
 
-        tmp = Mat::zeros(img.size(), CV_8UC3);
-        drawClusters(tmp, &regions, &final_clusters);
-        sprintf(buf, "out1/%s.%d.cluster1.jpg", argv[1], step);
-        imwrite(buf, tmp);
+      tmp = Mat::zeros(img.size(), CV_8UC3);
+      drawClusters(tmp, &regions, &final_clusters);
+      sprintf(buf, "out1/%s.%d.cluster1.jpg", argv[1], step);
+      imwrite(buf, tmp);
     }
 
 
@@ -299,44 +310,62 @@ int main( int argc, char** argv )
         //if ( group_boost(&meaningful_clusters.at(k), &regions)) // TODO try is it's betetr to accumulate only the most probable text groups
         accumulate_evidence(&meaningful_clusters.at(k), 1, &co_occurrence_matrix);
 
-        if ( (group_boost(&meaningful_clusters.at(k), &regions) >= DECISION_THRESHOLD_SF) )
+        int j=random()%1000;
+
+        if (
+            validateBlock(regions, graph, meaningful_clusters.at(k), group_boost, j)
+            // (group_boost(&meaningful_clusters.at(k), &regions) >= DECISION_THRESHOLD_SF)
+            // && groupVar(regions, meaningful_clusters[k])<0.1
+           )
         {
           final_clusters.push_back(meaningful_clusters.at(k));
+          if(debug){
+            Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+            fillRegions(tmp, regions, meaningful_clusters[k]);
+            char buf[100]; sprintf(buf, "out1/%d.group.jpg",  j);
+            imwrite(buf, tmp);
+          }
         }
+
+
+        // set<int> rs;
+        // set<int> ss;
+        // vector<int> crt;
+        // for(int i=0; i<final_clusters.size(); i++){
+        // for(int j=0; j<final_clusters[i].size(); j++){
+        // rs.insert(final_clusters[i][j]);
+        // }
+        // }
+        // for(int i=0; i<srt.size(); i++){
+        // for(int j=0; j<srt[i].size(); j++){
+        // ss.insert(srt[i][j]);
+        // }
+        // }
+        // // cout<<"after insert"<<endl;
+        // for(set<int>::iterator it=ss.begin(); it!=ss.end(); it++){
+        // int t=*it;
+        // if(rs.find(t)!=rs.end()) continue;
+        // crt.push_back(*it);
+        // }
+        // Mat tmp = Mat::zeros(img.size(), CV_8UC3);
+        // fillRegions(tmp, regions, crt);
+        // char buf[100]; sprintf(buf, "out1/%s.%d.correct0.jpg", argv[1], step);
+        // imwrite(buf, tmp);
+        // final_clusters.push_back(crt);
       }
-
-      Mat tmp_segmentation = Mat::zeros(img.size(),CV_8UC3);
-      Mat tmp_all_segmentations = Mat::zeros(240,320*11,CV_8UC3);
-      drawClusters(tmp_segmentation, &regions, &meaningful_clusters);
-      Mat tmp = Mat::zeros(240,320,CV_8UC3);
-      resize(tmp_segmentation,tmp,tmp.size());
-      Mat _t=tmp_all_segmentations(Rect(320*f,0,320,240));
-      tmp.copyTo(_t);
-      all_segmentations = all_segmentations + tmp_all_segmentations;
-
-      free(data);
-      meaningful_clusters.clear();
     }
+    cout<<"features finished.........."<<endl;
 
+    //t = cvGetTickCount() - t;
+    //cout << "Clusterings (" << NUM_FEATURES << ") done in " << t/((double)cvGetTickFrequency()*1000.) << " ms." << endl;
+    //t = (double)cvGetTickCount();
 
     for(int xx=0; xx<1; xx++)
     {
         int dim=2;
         t_float *data = (t_float*)malloc(dim*N * sizeof(t_float));
-        // for (int i=0, count=0; i<regions.size(); i++, count+=dim)
-        // {
-            // Region &r = regions.at(i);
-            // //data[count+0] = (t_float)r.bbox_.height*r.stroke_mean_;
-            // //data[count+1] = (t_float)regions.at(i).stroke_mean_;
-            // //data[count+2] = (t_float)regions.at(i).stroke_std_;
-            // //data[count+1] = (t_float)regions.at(i).bbox_.x/pow(img.cols, 0.5);
-            // data[count] = (t_float)regions.at(i).bbox_y1_; //bbox_.y/pow(img.rows, 0.5);
-            // data[count+1] = (t_float)regions.at(i).bbox_y2_; //bbox_.y/pow(img.rows, 0.5);
-        // }
-        // mm_clustering(data, N, dim, METHOD_METR_SINGLE, METRIC_SEUCLIDEAN, &meaningful_clusters); // TODO try accumulating more evidence by using different methods and metrics
         vector<vector<int> > lines;
         for(int i=0; i< blocks.size(); i++){
-          if(blockTag[i]) continue;
           cutToLines(sameline, blocks[i], lines);
         }
 
@@ -352,62 +381,33 @@ int main( int argc, char** argv )
             for(int j=0; j<s.size(); j++){
                 scores.push_back(regions.at(s[j]).classifier_votes_);
             }
-            int j=random()%1000;
             //cout<<"group "<<j<<":"<<endl;
             if(s.size()>1)
             {// && group_boost(&s, &regions) >= DECISION_THRESHOLD_SF/5) {
               float f = groupScore(graph,  s);
               float g = groupVar(regions, s);
               float h= group_boost(&s, &regions)/ DECISION_THRESHOLD_SF;
-              cout<<"group"<<j<<":"<<f<<endl;
-              cout<<"var:"<<g<<endl;
-              if(f>=200 && g<=0.015 && h>=0.1 || f>700 && g<=0.1){
+              int j=random()%1000;
+              if(validateBlock(regions, graph, s, group_boost, j)){
                 srt.push_back(s);
                 final_clusters.push_back(s);
+                if(debug){
+                  cout<<"group"<<j<<":"<<f<<endl;
+                  cout<<"var:"<<g<<endl;
+                  Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+                  fillRegions(tmp, regions, s);
+                  char buf[100]; sprintf(buf, "out1/%d.group.jpg",  j);
+                  imwrite(buf, tmp);
+                }
               }
             }
-           // Mat tmp = Mat::zeros(img.size(), CV_8UC1);
-           // fillRegions(tmp, regions, s);
-           // char buf[100]; sprintf(buf, "out1/%d.group.jpg",  j);
-           // imwrite(buf, tmp);
         }
         tmp = Mat::zeros(img.size(), CV_8UC3);
         drawClusters(tmp, &regions, &srt);
         sprintf(buf, "out1/%s.%d.lines1.jpg", argv[1], step);
         imwrite(buf, tmp);
-
-
-        // set<int> rs;
-        // set<int> ss;
-        // vector<int> crt;
-        // for(int i=0; i<final_clusters.size(); i++){
-          // for(int j=0; j<final_clusters[i].size(); j++){
-            // rs.insert(final_clusters[i][j]);
-          // }
-        // }
-        // for(int i=0; i<srt.size(); i++){
-          // for(int j=0; j<srt[i].size(); j++){
-            // ss.insert(srt[i][j]);
-          // }
-        // }
-        // // cout<<"after insert"<<endl;
-        // for(set<int>::iterator it=ss.begin(); it!=ss.end(); it++){
-            // int t=*it;
-            // if(rs.find(t)!=rs.end()) continue;
-            // crt.push_back(*it);
-        // }
-        // Mat tmp = Mat::zeros(img.size(), CV_8UC3);
-        // fillRegions(tmp, regions, crt);
-        // char buf[100]; sprintf(buf, "out1/%s.%d.correct0.jpg", argv[1], step);
-        // imwrite(buf, tmp);
-        // final_clusters.push_back(crt);
     }
 
-    //t = cvGetTickCount() - t;
-    //cout << "Clusterings (" << NUM_FEATURES << ") done in " << t/((double)cvGetTickFrequency()*1000.) << " ms." << endl;
-    //t = (double)cvGetTickCount();
-
-    /**/
     double minVal;
     double maxVal;
     minMaxLoc(co_occurrence_matrix, &minVal, &maxVal);
@@ -443,12 +443,19 @@ int main( int argc, char** argv )
     for (int i=meaningful_clusters.size()-1; i>=0; i--)
     {
       //if ( (! group_boost(&meaningful_clusters.at(i), &regions)) || (meaningful_clusters.at(i).size()<3) )
-      if ( (group_boost(&meaningful_clusters.at(i), &regions) >= DECISION_THRESHOLD_EA) )
-      {
+      // if ( (group_boost(&meaningful_clusters.at(i), &regions) >= DECISION_THRESHOLD_EA) )
+      int j=random()%1000;
+      if(validateBlock( regions, graph, meaningful_clusters[i], group_boost,j)){
         final_clusters.push_back(meaningful_clusters.at(i));
+        if(debug){
+          Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+          fillRegions(tmp, regions, meaningful_clusters[i]);
+          char buf[100]; sprintf(buf, "out1/%d.group.jpg",  j);
+          imwrite(buf, tmp);
+        }
       }
     }
-//////////
+    //////////
     {
       set<int> rs;
       for(int i=0; i<final_clusters.size(); i++){
@@ -485,17 +492,17 @@ int main( int argc, char** argv )
 
     // drawClusters(segmentation, &regions, &final_clusters);
     {
-        set<int> res;
-        for(int i=0; i<final_clusters.size(); i++){
-            for(int j=0; j<final_clusters[i].size(); j++){
-                res.insert(final_clusters[i][j]);
-            }
+      set<int> res;
+      for(int i=0; i<final_clusters.size(); i++){
+        for(int j=0; j<final_clusters[i].size(); j++){
+          res.insert(final_clusters[i][j]);
         }
-        for(set<int>::iterator it=res.begin(); it!=res.end(); it++){
-            int i=*it;
-            final_regions.push_back(regions[i]);
-        }
-        if( step == 1) mid=final_regions.size()-1;
+      }
+      for(set<int>::iterator it=res.begin(); it!=res.end(); it++){
+        int i=*it;
+        final_regions.push_back(regions[i]);
+      }
+      if( step == 1) mid=final_regions.size()-1;
     }
 
     if (step == 2)

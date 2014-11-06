@@ -350,7 +350,7 @@ void thin2(Mat& bwImg)
 
 //    return 0;
 //}
-float groupScore(vector<vector<float> > &graph, vector<float> &scores, vector<int> &group){
+float groupScore(vector<vector<float> > &graph, vector<int> &group){
     int N=group.size();
     vector<vector<float> > sims(N, vector<float>(N,0));
     float t=0;
@@ -366,7 +366,7 @@ float groupScore(vector<vector<float> > &graph, vector<float> &scores, vector<in
 //        ti*=tn;
         t+=tn;
     }
-    float s = t/pow(N, 0.7);
+    float s = t/pow(N, 0.4);
    //cout<<"sum:"<<t<<" sim:"<<s<<endl;
     return s;
 }

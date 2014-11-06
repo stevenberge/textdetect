@@ -12,6 +12,6 @@ void printImg(IplImage *out, bool bin=false);
 void strenth(Mat &, Mat &);
 void thin2(Mat& bwImg);
 void mask(Mat&src, Mat&dst);
-float groupScore(vector<vector<float> > &graph, vector<float> &scores, vector<int> &group);
+float groupScore(vector<vector<float> > &graph,  vector<int> &group);
 
 #endif
