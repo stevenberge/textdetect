@@ -151,6 +151,8 @@ int main( int argc, char** argv )
     all_segmentations = Mat::zeros(240,320*11,CV_8UC3);
 
     vector<Region> final_regions;
+    vector<vector<int> > final_lines;
+    vector<Region> line_regions;
     int mid = -1;
     for (int step =1; step<3; step++)
     {
@@ -254,6 +256,7 @@ int main( int argc, char** argv )
                 if ( (group_boost(&blocks.at(j), &regions) >= DECISION_THRESHOLD_SF) )
                 {
                     final_clusters.push_back(blocks[j]);
+                    final_lines.push_back(blocks[j]);
                     blockTag[j]=true;
                 }
             }
@@ -297,9 +300,12 @@ int main( int argc, char** argv )
                     float g = groupVar(regions, line);
                     float h= group_boost(&line, &regions)/ DECISION_THRESHOLD_SF;
 
-                    if(f>=200 && g<=0.015 && h>=0.1 || f>700 && g<=0.1 || h>DECISION_THRESHOLD_SF){
+                    bool t=false;
+                    if(f>=200 && g<=0.015 && h>=0.1 || f>500 && g<=0.1 || h>DECISION_THRESHOLD_SF){
+                        t=true;
                         srt.push_back(line);
                         final_clusters.push_back(line);
+                        final_lines.push_back(line);
                     }
                     else{
                         rrt.push_back(line);
@@ -308,6 +314,7 @@ int main( int argc, char** argv )
                         cout<<"group"<<j<<":"<<f<<endl;
                         cout<<"var:"<<g<<endl;
                         cout<<"boost:"<<h<<endl;
+                        if(t) cout<<"as line is chosen..."<<endl;
                         Mat tmp = Mat::zeros(img.size(), CV_8UC1);
                         fillRegions(tmp, regions, line);
                         char buf[100]; sprintf(buf, "out1/%d.group.jpg",  j);
@@ -397,6 +404,15 @@ int main( int argc, char** argv )
                 if ( (group_boost(&meaningful_clusters.at(k), &regions) >= DECISION_THRESHOLD_SF) )
                 {
                     final_clusters.push_back(meaningful_clusters.at(k));
+                    if(debug){
+                        int j=random()%1000;
+                        cout<<"group"<<j<<":"<<endl;
+                        cout<<"as meaningful is chosen..."<<endl;
+                        Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+                        fillRegions(tmp, regions, meaningful_clusters.at(k));
+                        char buf[100]; sprintf(buf, "out1/%d.group.jpg",  j);
+                        imwrite(buf, tmp);
+                    }
                 }
             }
 
@@ -456,6 +472,15 @@ int main( int argc, char** argv )
             if ( (group_boost(&meaningful_clusters.at(i), &regions) >= DECISION_THRESHOLD_EA) )
             {
                 final_clusters.push_back(meaningful_clusters.at(i));
+                if(debug){
+                    int j=random()%1000;
+                    cout<<"block"<<j<<":"<<endl;
+                    cout<<"as occurance matrix is chosen..."<<endl;
+                    Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+                    fillRegions(tmp, regions, meaningful_clusters.at(i));
+                    char buf[100]; sprintf(buf, "out1/%d.group.jpg",  j);
+                    imwrite(buf, tmp);
+                }
             }
         }
         //////////
@@ -483,15 +508,24 @@ int main( int argc, char** argv )
             }
             ////
             final_clusters.push_back(crt);
+            if(debug){
+                int j=random()%1000;
+                cout<<"group"<<j<<":"<<endl;
+                cout<<"as crt is chosen..."<<endl;
+                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+                fillRegions(tmp, regions, crt);
+                char buf[100]; sprintf(buf, "out1/%d.group.jpg",  j);
+                imwrite(buf, tmp);
+            }
 
             /////////
-            final_clusters.clear();
-            for(set<int>::iterator it = rs.begin(); it != rs.end(); it++){
-                int t = *it, s = lineNum[t];
-                if(s >= 0 && !lineTag[s])
-                    lineTag[s] = true,  getLineRect(regions, lines[s], rects),
-                            final_clusters.push_back(lines[s]);
-            }
+            //final_clusters.clear();
+//            for(set<int>::iterator it = rs.begin(); it != rs.end(); it++){
+//                int t = *it, s = lineNum[t];
+//                if(s >= 0 && !lineTag[s])
+//                    lineTag[s] = true,  getLineRect(regions, lines[s], rects);//,
+//                           // final_clusters.push_back(lines[s]);
+//            }
 
             Mat tmp = Mat::zeros(img.size(), CV_8UC3);
             drawMSERs(tmp, &bs, true, &img, true);
@@ -500,6 +534,7 @@ int main( int argc, char** argv )
         }
 
         // drawClusters(segmentation, &regions, &final_clusters);
+        cout<<"store final regions"<<endl;
         {
             set<int> res;
             for(int i=0; i<final_clusters.size(); i++){
@@ -513,19 +548,48 @@ int main( int argc, char** argv )
             }
             if( step == 1) mid=final_regions.size()-1;
         }
+        cout<<"store line regions"<<endl;
+        {
+            set<int>  ls;
+            for(int i=0; i<final_lines.size(); i++){
+                for(int j=0; j<final_lines[i].size(); j++){
+                    ls.insert(final_lines[i][j]);
+                }
+            }
+            for(set<int>::iterator it=ls.begin(); it!=ls.end(); it++){
+                int i=*it;
+                assert(i>=0 && i<N);
+                line_regions.push_back(regions.at(i));
+            }
+            final_lines.clear();
+        }
 
         if (step == 2)
         {
             vector<int> res;
             unique(final_regions, mid, res);
-            Mat tmp = Mat::zeros(img.size(), CV_8UC1);
-            fillRegions(tmp, final_regions, res);
-            //cvtColor(tmp, tmp, CV_BGR2GRAY);
-            //threshold(tmp,tmp,1,255,CV_THRESH_BINARY);
-            char buf[100];
-            sprintf(buf, "out1/%s.out.png", argv[1]);
-            imwrite(buf, tmp);
-
+            {
+                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+                fillRegions(tmp, final_regions, res);
+                //cvtColor(tmp, tmp, CV_BGR2GRAY);
+                //threshold(tmp,tmp,1,255,CV_THRESH_BINARY);
+                char buf[100];
+                sprintf(buf, "out1/%s.out.png", argv[1]);
+                imwrite(buf, tmp);
+            }
+            cout<<"paint line regions"<<endl;
+            {
+                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+                cout<<"size of line regions:"<<line_regions.size()<<endl;
+                fillRegions(tmp, line_regions);
+                //cvtColor(tmp, tmp, CV_BGR2GRAY);
+                //threshold(tmp,tmp,1,255,CV_THRESH_BINARY);
+                char buf[100];
+                sprintf(buf, "out1/%s.lines.png", argv[1]);
+                imwrite(buf, tmp);
+                line_regions.clear();
+            }
+            cout<<"output rects"<<endl;
             for(int i=0; i<rects.size(); i++){
                 Rect &r = rects[i];
                 printf("%d, %d, %d, %d\n", r.x, r.y, r.x + r.width, r.y + r.height);

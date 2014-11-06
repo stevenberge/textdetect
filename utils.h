@@ -245,7 +245,7 @@ void fillRegions(Mat& img, vector<Region> &regions,vector<int> &group)
         }
     }
 }
-void fillRegions(Mat& img, vector<Region> &regions, int color=1)
+void fillRegions(Mat& img, vector<Region> &regions)
 {
   //img = img*0;
   uchar* rsptr = (uchar*)img.data;
@@ -253,11 +253,12 @@ void fillRegions(Mat& img, vector<Region> &regions, int color=1)
     {
       // cout<<"fillregion with size:"<<regions[i].pixels_.size()<<endl;
       // if(regions[i].pixels_.size()>=870)
-      for (int p=0; p<regions[i].pixels_.size(); p++)
+      //printf("fill %d\n",i);
+      for (int p=0; p<regions.at(i).pixels_.size(); p++)
         {
-          rsptr[regions[i].pixels_.at(p)*3] = color?0:255;
-          rsptr[regions[i].pixels_.at(p)*3+1] = color?0:255;//bcolors[i%9][2];
-          rsptr[regions[i].pixels_.at(p)*3+2] =255;// bcolors[i%9][2];
+          rsptr[regions[i].pixels_.at(p)] = 255;
+//          rsptr[regions[i].pixels_.at(p)*3+1] = color?0:255;//bcolors[i%9][2];
+//          rsptr[regions[i].pixels_.at(p)*3+2] =255;// bcolors[i%9][2];
         }
     }
 }

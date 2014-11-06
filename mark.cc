@@ -30,11 +30,16 @@ int main(int n, char **args){
   char buf[100];
   int x1, y1, x2, y2;
   while(true){
-    out>>(buf);
+    out.get(buf, 100);
+    if(buf[0]==0) break;
+    char c; out.get(c);
     sscanf(buf, "%d, %d, %d, %d", &x1, &y1, &x2, &y2);
+    cout<<"buf:"<<buf<<endl;
+    cout<<x1<<","<<y1<<":"<<x2<<","<<y2<<endl;
     rects.push_back(Rect(x1, y1, x2-x1, y2-y1));
   }
   fillRegions(tmp, rects);
   imwrite(oImg, tmp);
+  out.close();
   return 0;
 }
