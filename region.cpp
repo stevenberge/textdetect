@@ -376,37 +376,29 @@ void Region::extract_features(Mat& _lab_img, Mat& _grey_img, Mat& _gradient_magn
     color_std_.push_back(std[1]);
     color_std_.push_back(std[2]);
 
-    int i=random()%1000;
-//    {
-//        char buf[100];
-//        sprintf(buf, "out1/%d.or.jpg", i);
-//        imwrite(buf, bw);
-//    }
+    int i=random()%1000; char buf[100];
 
     Mat tmp; //, tmp1=bw.clone(), tmp2_=bw.clone(); //, tmp1 = bw.clone();
     distanceTransform(bw, tmp, CV_DIST_L1, 3); //L1 gives distance in round integers while L2 floats
-//    IplImage a=IplImage(bw), b=IplImage(tmp1), c=IplImage(tmp2_);
-//    cvDistTransform( &a, &b, CV_DIST_L1, CV_DIST_MASK_5, NULL, NULL);
-//    printImg(&b);
-//     distanceTransform(bw, tmp1, CV_DIST_L1, CV_DIST_MASK_5); //L1 gives distance in round integers while L2 floats
-//      printImg(bw, true);
-//    thin2(tmp1);
 
-//    {
-//        char buf[100];
-//        sprintf(buf, "out1/%d.sk.jpg", i);
-//        imwrite(buf, tmp1);
-//        sprintf(buf, "out1/%d.dt.jpg", i);
-//        imwrite(buf, tmp);
-//        cout<<buf<<endl;
-//    }
-//    mask(tmp, tmp1);
-//    {
-//        char buf[100];
-//        sprintf(buf, "out1/%d.sm.jpg", i);
-//        imwrite(buf, tmp1);
-//    }
+   // xihua(tmp, xh);
 
+
+//    Mat xh=bw.clone();
+//    IplImage s=xh;
+//    scantable(&s);
+//    sprintf(buf, "out1/%d.xihua.png", i);
+//    imwrite(buf, xh);
+
+//    thin(bw, xh, 10);
+//    sprintf(buf, "out1/%d.xihua1.png", i);
+//    imwrite(buf, xh);
+
+//    mask(tmp, xh, 40);
+//    sprintf(buf, "out1/%d.xihuamsk.png", i);
+//    imwrite(buf, xh);
+//    cout<<i<<":"<<endl;
+//    printImg(tmp, false);
     meanStdDev(tmp,mean,std,bw);
 
     stroke_mean_ = mean[0];

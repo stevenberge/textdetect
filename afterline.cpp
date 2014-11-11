@@ -94,7 +94,28 @@ struct cmp{
         return a.x < b.x;
     }
 }cmper;
-void getLineRect(const vector<Region> &regions, const vector<int> &line, vector<Rect> &res){
+Rect getLineRect(const vector<Region> &regions, const vector<int> &line){
+    int n = line.size();
+    if(n==0) return Rect(-1, -1, -1, -1);
+    vector<Rect> rects;
+    for(int i=0; i<n; i++){
+        const Rect &r = regions[line[i]].bbox_;
+        rects.push_back(r);
+    }
+    sort(rects.begin(), rects.end(), cmper);
+    int x1=-1, x2=-1, y1=-1, y2=-1;
+    //int x = 0, y = 0;
+    for(int i=0; i<rects.size(); i++){
+        Rect &r=rects[i];
+        assert(r.x>=x2);
+        x1 = x1 >= 0 ? min(x1, r.x) : r.x;
+        y1 = y1 >= 0 ? min(y1, r.y) : r.y;
+        x2 = x2 >= 0 ? max(x2, r.x + r.width) : r.x + r.width;
+        y2 = y2 >= 0 ? max(y2, r.y + r.height) : r.y + r.height;
+    }
+    return Rect(x1, y1, x2-x1, y2-y1);
+}
+void getLineRects(const vector<Region> &regions, const vector<int> &line, vector<Rect> &res){
     int n = line.size();
     if(n==0) return ;
 
@@ -112,8 +133,9 @@ void getLineRect(const vector<Region> &regions, const vector<int> &line, vector<
     //int x = 0, y = 0;
     for(int i=0; i<rects.size(); i++){
         Rect &r=rects[i];
-        if( x2<0 || r.x-x2 < width/2){
-//        const Region &r=regions[line[i]];
+        assert(r.x>=x2);
+        if( x2<0 || r.x-x2 < width*3){
+            const Rect &r=regions[line[i]].bbox_;
             x1 = x1 >= 0 ? min(x1, r.x) : r.x;
             y1 = y1 >= 0 ? min(y1, r.y) : r.y;
             x2 = x2 >= 0 ? max(x2, r.x + r.width) : r.x + r.width;
@@ -132,9 +154,7 @@ int main( int argc, char** argv )
 {
 
     Mat img, grey, lab_img, gradient_magnitude, segmentation, all_segmentations;
-
-    vector<Region> regions;
-    vector<Rect> rects;
+    vector<Region> regions; vector<Rect> rects;
     //::MSER mser8(true,20,0.00008,0.03,1,0.7);
     ::MSER mser8(true,15,0.00008,0.05,1,0.7);
     bool debug=argc>2;
@@ -156,7 +176,6 @@ int main( int argc, char** argv )
     int mid = -1;
     for (int step =1; step<3; step++)
     {
-
         if (step == 2)
             grey = 255-grey;
 
@@ -268,6 +287,7 @@ int main( int argc, char** argv )
         }
 
         vector<vector<int> > lines;
+        vector<Rect> lineRect;
         vector<int> lineNum(N, -1);
         vector<bool> lineTag(N, false);
         {
@@ -278,7 +298,9 @@ int main( int argc, char** argv )
                 //if(blockTag[i]) continue;
                 cutToLines(sameline, blocks[i], lines);
             }
-
+            for(int i=0; i<lines.size(); i++){
+                lineRect.push_back(getLineRect(regions, lines[i]));
+            }
             Mat tmp = Mat::zeros(img.size(), CV_8UC3);
             drawClusters(tmp, &regions, &lines);
             char buf[100]; sprintf(buf, "out1/%s.%d.lines0.jpg", argv[1], step);
@@ -295,7 +317,6 @@ int main( int argc, char** argv )
                 //cout<<"group "<<j<<":"<<endl;
                 if(line.size()>1)
                 {
-
                     float f = groupScore(graph,  line);
                     float g = groupVar(regions, line);
                     float h= group_boost(&line, &regions)/ DECISION_THRESHOLD_SF;
@@ -520,12 +541,11 @@ int main( int argc, char** argv )
 
             /////////
             //final_clusters.clear();
-//            for(set<int>::iterator it = rs.begin(); it != rs.end(); it++){
-//                int t = *it, s = lineNum[t];
-//                if(s >= 0 && !lineTag[s])
-//                    lineTag[s] = true,  getLineRect(regions, lines[s], rects);//,
-//                           // final_clusters.push_back(lines[s]);
-//            }
+            for(set<int>::iterator it = rs.begin(); it != rs.end(); it++){
+                int t = *it, s = lineNum[t];
+                if(s >= 0 && !lineTag[s])
+                    lineTag[s] = true;
+            }
 
             Mat tmp = Mat::zeros(img.size(), CV_8UC3);
             drawMSERs(tmp, &bs, true, &img, true);
@@ -547,6 +567,37 @@ int main( int argc, char** argv )
                 final_regions.push_back(regions[i]);
             }
             if( step == 1) mid=final_regions.size()-1;
+
+
+            // final regions => better regions
+            {
+                for(int i=0; i<lines.size(); i++){
+                    if(lines[i].size()<1) continue;
+
+                    Mat tmp=img(lineRect[i]);
+                    char buf[100];
+                    sprintf(buf, "out1/%s.%d.png", argv[1], i);
+                    imwrite(buf, tmp);
+
+                    float stroke_mean=0;
+                    for(int j=0; j<lines[i].size(); j++){
+                        int k=lines[i][j];
+                        stroke_mean+=regions[k].stroke_mean_;
+                    }
+                    stroke_mean/=lines[i].size();
+                    int width=(1+stroke_mean);
+
+                    ::MSER mser(true,width,0.00008,0.05,1,0.7);
+                    vector<Region> tt;
+                    mser(tmp.data, lineRect[i].width, lineRect[i].height, tt);
+                    Mat ttmp = Mat::zeros(tmp.size(), CV_8UC1);
+                    fillRegions(ttmp, tt);
+
+                    sprintf(buf, "out1/%s.mser.%d.png", argv[1], i);
+                    imwrite(buf, ttmp);
+                }
+            }
+
         }
         cout<<"store line regions"<<endl;
         {

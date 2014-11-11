@@ -99,6 +99,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named mser
+
+# Build rule for target.
+mser: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 mser
+.PHONY : mser
+
+# fast build rule for target.
+mser/fast:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/build
+.PHONY : mser/fast
+
+#=============================================================================
 # Target rules for targets named textdetect
 
 # Build rule for target.
@@ -164,6 +177,7 @@ fast_clustering.o: fast_clustering.cpp.o
 
 # target to build an object file
 fast_clustering.cpp.o:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/fast_clustering.cpp.o
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/fast_clustering.cpp.o
 .PHONY : fast_clustering.cpp.o
 
@@ -172,6 +186,7 @@ fast_clustering.i: fast_clustering.cpp.i
 
 # target to preprocess a source file
 fast_clustering.cpp.i:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/fast_clustering.cpp.i
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/fast_clustering.cpp.i
 .PHONY : fast_clustering.cpp.i
 
@@ -180,6 +195,7 @@ fast_clustering.s: fast_clustering.cpp.s
 
 # target to generate assembly for a file
 fast_clustering.cpp.s:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/fast_clustering.cpp.s
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/fast_clustering.cpp.s
 .PHONY : fast_clustering.cpp.s
 
@@ -188,6 +204,7 @@ group_classifier.o: group_classifier.cpp.o
 
 # target to build an object file
 group_classifier.cpp.o:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/group_classifier.cpp.o
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/group_classifier.cpp.o
 .PHONY : group_classifier.cpp.o
 
@@ -196,6 +213,7 @@ group_classifier.i: group_classifier.cpp.i
 
 # target to preprocess a source file
 group_classifier.cpp.i:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/group_classifier.cpp.i
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/group_classifier.cpp.i
 .PHONY : group_classifier.cpp.i
 
@@ -204,6 +222,7 @@ group_classifier.s: group_classifier.cpp.s
 
 # target to generate assembly for a file
 group_classifier.cpp.s:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/group_classifier.cpp.s
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/group_classifier.cpp.s
 .PHONY : group_classifier.cpp.s
 
@@ -212,6 +231,7 @@ max_meaningful_clustering.o: max_meaningful_clustering.cpp.o
 
 # target to build an object file
 max_meaningful_clustering.cpp.o:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/max_meaningful_clustering.cpp.o
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.o
 .PHONY : max_meaningful_clustering.cpp.o
 
@@ -220,6 +240,7 @@ max_meaningful_clustering.i: max_meaningful_clustering.cpp.i
 
 # target to preprocess a source file
 max_meaningful_clustering.cpp.i:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/max_meaningful_clustering.cpp.i
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.i
 .PHONY : max_meaningful_clustering.cpp.i
 
@@ -228,6 +249,7 @@ max_meaningful_clustering.s: max_meaningful_clustering.cpp.s
 
 # target to generate assembly for a file
 max_meaningful_clustering.cpp.s:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/max_meaningful_clustering.cpp.s
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.s
 .PHONY : max_meaningful_clustering.cpp.s
 
@@ -236,6 +258,7 @@ min_bounding_box.o: min_bounding_box.cpp.o
 
 # target to build an object file
 min_bounding_box.cpp.o:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/min_bounding_box.cpp.o
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/min_bounding_box.cpp.o
 .PHONY : min_bounding_box.cpp.o
 
@@ -244,6 +267,7 @@ min_bounding_box.i: min_bounding_box.cpp.i
 
 # target to preprocess a source file
 min_bounding_box.cpp.i:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/min_bounding_box.cpp.i
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/min_bounding_box.cpp.i
 .PHONY : min_bounding_box.cpp.i
 
@@ -252,6 +276,7 @@ min_bounding_box.s: min_bounding_box.cpp.s
 
 # target to generate assembly for a file
 min_bounding_box.cpp.s:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/min_bounding_box.cpp.s
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/min_bounding_box.cpp.s
 .PHONY : min_bounding_box.cpp.s
 
@@ -260,6 +285,7 @@ mser.o: mser.cpp.o
 
 # target to build an object file
 mser.cpp.o:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/mser.cpp.o
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/mser.cpp.o
 .PHONY : mser.cpp.o
 
@@ -268,6 +294,7 @@ mser.i: mser.cpp.i
 
 # target to preprocess a source file
 mser.cpp.i:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/mser.cpp.i
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/mser.cpp.i
 .PHONY : mser.cpp.i
 
@@ -276,6 +303,7 @@ mser.s: mser.cpp.s
 
 # target to generate assembly for a file
 mser.cpp.s:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/mser.cpp.s
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/mser.cpp.s
 .PHONY : mser.cpp.s
 
@@ -284,6 +312,7 @@ nfa.o: nfa.cpp.o
 
 # target to build an object file
 nfa.cpp.o:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/nfa.cpp.o
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/nfa.cpp.o
 .PHONY : nfa.cpp.o
 
@@ -292,6 +321,7 @@ nfa.i: nfa.cpp.i
 
 # target to preprocess a source file
 nfa.cpp.i:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/nfa.cpp.i
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/nfa.cpp.i
 .PHONY : nfa.cpp.i
 
@@ -300,6 +330,7 @@ nfa.s: nfa.cpp.s
 
 # target to generate assembly for a file
 nfa.cpp.s:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/nfa.cpp.s
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/nfa.cpp.s
 .PHONY : nfa.cpp.s
 
@@ -308,6 +339,7 @@ region.o: region.cpp.o
 
 # target to build an object file
 region.cpp.o:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/region.cpp.o
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/region.cpp.o
 .PHONY : region.cpp.o
 
@@ -316,6 +348,7 @@ region.i: region.cpp.i
 
 # target to preprocess a source file
 region.cpp.i:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/region.cpp.i
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/region.cpp.i
 .PHONY : region.cpp.i
 
@@ -324,6 +357,7 @@ region.s: region.cpp.s
 
 # target to generate assembly for a file
 region.cpp.s:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/region.cpp.s
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/region.cpp.s
 .PHONY : region.cpp.s
 
@@ -332,6 +366,7 @@ region_classifier.o: region_classifier.cpp.o
 
 # target to build an object file
 region_classifier.cpp.o:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/region_classifier.cpp.o
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/region_classifier.cpp.o
 .PHONY : region_classifier.cpp.o
 
@@ -340,6 +375,7 @@ region_classifier.i: region_classifier.cpp.i
 
 # target to preprocess a source file
 region_classifier.cpp.i:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/region_classifier.cpp.i
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/region_classifier.cpp.i
 .PHONY : region_classifier.cpp.i
 
@@ -348,8 +384,33 @@ region_classifier.s: region_classifier.cpp.s
 
 # target to generate assembly for a file
 region_classifier.cpp.s:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/region_classifier.cpp.s
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/region_classifier.cpp.s
 .PHONY : region_classifier.cpp.s
+
+test_mser.o: test_mser.cpp.o
+.PHONY : test_mser.o
+
+# target to build an object file
+test_mser.cpp.o:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/test_mser.cpp.o
+.PHONY : test_mser.cpp.o
+
+test_mser.i: test_mser.cpp.i
+.PHONY : test_mser.i
+
+# target to preprocess a source file
+test_mser.cpp.i:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/test_mser.cpp.i
+.PHONY : test_mser.cpp.i
+
+test_mser.s: test_mser.cpp.s
+.PHONY : test_mser.s
+
+# target to generate assembly for a file
+test_mser.cpp.s:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/test_mser.cpp.s
+.PHONY : test_mser.cpp.s
 
 # Help Target
 help:
@@ -358,6 +419,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... mser"
 	@echo "... rebuild_cache"
 	@echo "... textdetect"
 	@echo "... afterline.o"
@@ -390,6 +452,9 @@ help:
 	@echo "... region_classifier.o"
 	@echo "... region_classifier.i"
 	@echo "... region_classifier.s"
+	@echo "... test_mser.o"
+	@echo "... test_mser.i"
+	@echo "... test_mser.s"
 .PHONY : help
 
 

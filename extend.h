@@ -9,9 +9,16 @@ using namespace cv;
 
 void printImg(Mat& img, bool bin=false);
 void printImg(IplImage *out, bool bin=false);
-void strenth(Mat &, Mat &);
+void thin(const Mat &src, Mat &dst, const int iterations);
 void thin2(Mat& bwImg);
-void mask(Mat&src, Mat&dst);
+
+
+void xihua(const Mat &o, Mat &tmp);
+void scantable(IplImage *src);
+void cvHilditchThin(cv::Mat& src, cv::Mat& dst);
+
+void mask(Mat&src, Mat&dst, int n=10);
 float groupScore(vector<vector<float> > &graph,  vector<int> &group);
 
+//void mask(Mat &src, Mat &dst);
 #endif

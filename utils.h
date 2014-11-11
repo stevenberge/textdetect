@@ -543,4 +543,9 @@ float groupVar(vector<Region> &regions, vector<int> & group){
   }
   return (stroke_var1/group.size()+stroke_var)/stroke_mean;
 }
+
+
+
+
+
 #endif

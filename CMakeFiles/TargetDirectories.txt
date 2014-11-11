@@ -1,1 +1,2 @@
+/home/x/textdetect/CMakeFiles/mser.dir
 /home/x/textdetect/CMakeFiles/textdetect.dir
