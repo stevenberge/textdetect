@@ -1,5 +1,4 @@
 FILE(REMOVE_RECURSE
-  "CMakeFiles/textdetect.dir/extend.cpp.o"
   "CMakeFiles/textdetect.dir/fast_clustering.cpp.o"
   "CMakeFiles/textdetect.dir/group_classifier.cpp.o"
   "CMakeFiles/textdetect.dir/afterline.cpp.o"

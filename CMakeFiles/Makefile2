@@ -94,7 +94,7 @@ clean: CMakeFiles/mser.dir/clean
 CMakeFiles/textdetect.dir/all:
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/depend
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles  10 11 12 13 14 15 16 17 18 19
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles  10 11 12 13 14 15 16 17 18
 	@echo "Built target textdetect"
 .PHONY : CMakeFiles/textdetect.dir/all
 
@@ -104,7 +104,7 @@ all: CMakeFiles/textdetect.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/textdetect.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/x/textdetect/CMakeFiles 10
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/x/textdetect/CMakeFiles 9
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/textdetect.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/x/textdetect/CMakeFiles 0
 .PHONY : CMakeFiles/textdetect.dir/rule

@@ -49,32 +49,9 @@ include CMakeFiles/textdetect.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/textdetect.dir/flags.make
 
-CMakeFiles/textdetect.dir/extend.cpp.o: CMakeFiles/textdetect.dir/flags.make
-CMakeFiles/textdetect.dir/extend.cpp.o: extend.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_1)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/extend.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/extend.cpp.o -c /home/x/textdetect/extend.cpp
-
-CMakeFiles/textdetect.dir/extend.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/textdetect.dir/extend.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/textdetect/extend.cpp > CMakeFiles/textdetect.dir/extend.cpp.i
-
-CMakeFiles/textdetect.dir/extend.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/textdetect.dir/extend.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/textdetect/extend.cpp -o CMakeFiles/textdetect.dir/extend.cpp.s
-
-CMakeFiles/textdetect.dir/extend.cpp.o.requires:
-.PHONY : CMakeFiles/textdetect.dir/extend.cpp.o.requires
-
-CMakeFiles/textdetect.dir/extend.cpp.o.provides: CMakeFiles/textdetect.dir/extend.cpp.o.requires
-	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/extend.cpp.o.provides.build
-.PHONY : CMakeFiles/textdetect.dir/extend.cpp.o.provides
-
-CMakeFiles/textdetect.dir/extend.cpp.o.provides.build: CMakeFiles/textdetect.dir/extend.cpp.o
-
 CMakeFiles/textdetect.dir/fast_clustering.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/fast_clustering.cpp.o: fast_clustering.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/fast_clustering.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/fast_clustering.cpp.o -c /home/x/textdetect/fast_clustering.cpp
 
@@ -97,7 +74,7 @@ CMakeFiles/textdetect.dir/fast_clustering.cpp.o.provides.build: CMakeFiles/textd
 
 CMakeFiles/textdetect.dir/group_classifier.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/group_classifier.cpp.o: group_classifier.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_3)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/group_classifier.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/group_classifier.cpp.o -c /home/x/textdetect/group_classifier.cpp
 
@@ -120,7 +97,7 @@ CMakeFiles/textdetect.dir/group_classifier.cpp.o.provides.build: CMakeFiles/text
 
 CMakeFiles/textdetect.dir/afterline.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/afterline.cpp.o: afterline.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_4)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/afterline.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/afterline.cpp.o -c /home/x/textdetect/afterline.cpp
 
@@ -143,7 +120,7 @@ CMakeFiles/textdetect.dir/afterline.cpp.o.provides.build: CMakeFiles/textdetect.
 
 CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.o: max_meaningful_clustering.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_5)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_4)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.o -c /home/x/textdetect/max_meaningful_clustering.cpp
 
@@ -166,7 +143,7 @@ CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.o.provides.build: CMakeF
 
 CMakeFiles/textdetect.dir/min_bounding_box.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/min_bounding_box.cpp.o: min_bounding_box.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_6)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_5)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/min_bounding_box.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/min_bounding_box.cpp.o -c /home/x/textdetect/min_bounding_box.cpp
 
@@ -189,7 +166,7 @@ CMakeFiles/textdetect.dir/min_bounding_box.cpp.o.provides.build: CMakeFiles/text
 
 CMakeFiles/textdetect.dir/mser.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/mser.cpp.o: mser.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_7)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_6)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/mser.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/mser.cpp.o -c /home/x/textdetect/mser.cpp
 
@@ -212,7 +189,7 @@ CMakeFiles/textdetect.dir/mser.cpp.o.provides.build: CMakeFiles/textdetect.dir/m
 
 CMakeFiles/textdetect.dir/nfa.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/nfa.cpp.o: nfa.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_8)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_7)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/nfa.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/nfa.cpp.o -c /home/x/textdetect/nfa.cpp
 
@@ -235,7 +212,7 @@ CMakeFiles/textdetect.dir/nfa.cpp.o.provides.build: CMakeFiles/textdetect.dir/nf
 
 CMakeFiles/textdetect.dir/region_classifier.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/region_classifier.cpp.o: region_classifier.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_9)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_8)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/region_classifier.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/region_classifier.cpp.o -c /home/x/textdetect/region_classifier.cpp
 
@@ -258,7 +235,7 @@ CMakeFiles/textdetect.dir/region_classifier.cpp.o.provides.build: CMakeFiles/tex
 
 CMakeFiles/textdetect.dir/region.cpp.o: CMakeFiles/textdetect.dir/flags.make
 CMakeFiles/textdetect.dir/region.cpp.o: region.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_10)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_9)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/textdetect.dir/region.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/textdetect.dir/region.cpp.o -c /home/x/textdetect/region.cpp
 
@@ -281,7 +258,6 @@ CMakeFiles/textdetect.dir/region.cpp.o.provides.build: CMakeFiles/textdetect.dir
 
 # Object files for target textdetect
 textdetect_OBJECTS = \
-"CMakeFiles/textdetect.dir/extend.cpp.o" \
 "CMakeFiles/textdetect.dir/fast_clustering.cpp.o" \
 "CMakeFiles/textdetect.dir/group_classifier.cpp.o" \
 "CMakeFiles/textdetect.dir/afterline.cpp.o" \
@@ -295,7 +271,6 @@ textdetect_OBJECTS = \
 # External object files for target textdetect
 textdetect_EXTERNAL_OBJECTS =
 
-textdetect: CMakeFiles/textdetect.dir/extend.cpp.o
 textdetect: CMakeFiles/textdetect.dir/fast_clustering.cpp.o
 textdetect: CMakeFiles/textdetect.dir/group_classifier.cpp.o
 textdetect: CMakeFiles/textdetect.dir/afterline.cpp.o
@@ -314,7 +289,6 @@ textdetect: CMakeFiles/textdetect.dir/link.txt
 CMakeFiles/textdetect.dir/build: textdetect
 .PHONY : CMakeFiles/textdetect.dir/build
 
-CMakeFiles/textdetect.dir/requires: CMakeFiles/textdetect.dir/extend.cpp.o.requires
 CMakeFiles/textdetect.dir/requires: CMakeFiles/textdetect.dir/fast_clustering.cpp.o.requires
 CMakeFiles/textdetect.dir/requires: CMakeFiles/textdetect.dir/group_classifier.cpp.o.requires
 CMakeFiles/textdetect.dir/requires: CMakeFiles/textdetect.dir/afterline.cpp.o.requires

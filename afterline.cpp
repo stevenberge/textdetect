@@ -301,6 +301,36 @@ int main( int argc, char** argv )
             for(int i=0; i<lines.size(); i++){
                 lineRect.push_back(getLineRect(regions, lines[i]));
             }
+
+            // regions => better regions
+            {
+                for(int i=0; i<lines.size(); i++){
+                    if(lines[i].size()<1) continue;
+
+                    Mat tmp=img(lineRect[i]);
+                    char buf[100];
+                    sprintf(buf, "out1/%s.%d.png", argv[1], i);
+                    imwrite(buf, tmp);
+
+                    float stroke_mean=0;
+                    for(int j=0; j<lines[i].size(); j++){
+                        int k=lines[i][j];
+                        stroke_mean+=regions[k].stroke_mean_;
+                    }
+                    stroke_mean/=lines[i].size();
+                    int width=(1+stroke_mean);
+
+                    ::MSER mser(true,width,0.00008,0.05,1,0.7);
+                    vector<Region> tt;
+                    mser(tmp.data, lineRect[i].width, lineRect[i].height, tt);
+                    Mat ttmp = Mat::zeros(tmp.size(), CV_8UC1);
+                    fillRegions(ttmp, tt);
+
+                    sprintf(buf, "out1/%s.mser.%d.png", argv[1], i);
+                    imwrite(buf, ttmp);
+                }
+            }
+
             Mat tmp = Mat::zeros(img.size(), CV_8UC3);
             drawClusters(tmp, &regions, &lines);
             char buf[100]; sprintf(buf, "out1/%s.%d.lines0.jpg", argv[1], step);
@@ -567,37 +597,6 @@ int main( int argc, char** argv )
                 final_regions.push_back(regions[i]);
             }
             if( step == 1) mid=final_regions.size()-1;
-
-
-            // final regions => better regions
-            {
-                for(int i=0; i<lines.size(); i++){
-                    if(lines[i].size()<1) continue;
-
-                    Mat tmp=img(lineRect[i]);
-                    char buf[100];
-                    sprintf(buf, "out1/%s.%d.png", argv[1], i);
-                    imwrite(buf, tmp);
-
-                    float stroke_mean=0;
-                    for(int j=0; j<lines[i].size(); j++){
-                        int k=lines[i][j];
-                        stroke_mean+=regions[k].stroke_mean_;
-                    }
-                    stroke_mean/=lines[i].size();
-                    int width=(1+stroke_mean);
-
-                    ::MSER mser(true,width,0.00008,0.05,1,0.7);
-                    vector<Region> tt;
-                    mser(tmp.data, lineRect[i].width, lineRect[i].height, tt);
-                    Mat ttmp = Mat::zeros(tmp.size(), CV_8UC1);
-                    fillRegions(ttmp, tt);
-
-                    sprintf(buf, "out1/%s.mser.%d.png", argv[1], i);
-                    imwrite(buf, ttmp);
-                }
-            }
-
         }
         cout<<"store line regions"<<endl;
         {
