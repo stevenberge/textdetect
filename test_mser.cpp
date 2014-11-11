@@ -45,8 +45,9 @@ int main( int argc, char** argv )
     for(int i=0; i<regions.size(); i++){
     }
 		{
-			Mat tmp= Mat::zeros(cvSize(img.cols, img.rows),CV_8UC3);
-			drawMSERs(tmp,&regions,true,NULL,true);
+			Mat tmp= Mat::zeros(cvSize(img.cols, img.rows),CV_8UC1);
+			// drawMSERs(tmp,&regions,true,NULL,true);
+			fillRegions(tmp,regions);
 			sprintf(str,"%s.%d.mser.jpg",argv[1],step);
 			imwrite(str,tmp);
 		}

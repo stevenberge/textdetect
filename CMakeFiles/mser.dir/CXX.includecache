@@ -62,10 +62,6 @@ region.h
 region_classifier.h
 /home/x/textdetect/region_classifier.h
 
-/home/x/textdetect/max_meaningful_clustering.cpp
-max_meaningful_clustering.h
-/home/x/textdetect/max_meaningful_clustering.h
-
 /home/x/textdetect/max_meaningful_clustering.h
 vector
 -
@@ -73,10 +69,6 @@ fast_clustering.cpp
 /home/x/textdetect/fast_clustering.cpp
 nfa.cpp
 /home/x/textdetect/nfa.cpp
-min_bounding_box.h
-/home/x/textdetect/min_bounding_box.h
-
-/home/x/textdetect/min_bounding_box.cpp
 min_bounding_box.h
 /home/x/textdetect/min_bounding_box.h
 
@@ -130,6 +122,8 @@ opencv/highgui.h
 opencv2/opencv.hpp
 -
 vector
+-
+queue
 -
 stdint.h
 -

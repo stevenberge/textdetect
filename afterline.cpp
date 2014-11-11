@@ -108,10 +108,10 @@ Rect getLineRect(const vector<Region> &regions, const vector<int> &line){
     for(int i=0; i<rects.size(); i++){
         Rect &r=rects[i];
         assert(r.x>=x2);
-        x1 = x1 >= 0 ? min(x1, r.x) : r.x;
-        y1 = y1 >= 0 ? min(y1, r.y) : r.y;
-        x2 = x2 >= 0 ? max(x2, r.x + r.width) : r.x + r.width;
-        y2 = y2 >= 0 ? max(y2, r.y + r.height) : r.y + r.height;
+        x1 = min(x1, r.x);
+        y1 = min(y1, r.y);
+        x2 = max(x2, r.x + r.width);
+        y2 = max(y2, r.y + r.height);
     }
     return Rect(x1, y1, x2-x1, y2-y1);
 }
@@ -190,6 +190,7 @@ int main( int argc, char** argv )
         //cout << "Detected " << regions.size() << " regions" << " in " << t/((double)cvGetTickFrequency()*1000.) << " ms." << endl;
         //t = (double)cvGetTickCount();
 
+
         for (int i=0; i<regions.size(); i++)
             regions[i].er_fill(grey);
         {
@@ -198,6 +199,23 @@ int main( int argc, char** argv )
             char buf[100]; sprintf(buf, "out1/%s.%d.mser0.jpg", argv[1], step);
             imwrite(buf, tmp);
         }
+
+        {
+            vector<Region> rs = regions;
+            for (int i=0; i<rs.size(); i++){
+                Rect &r = rs[i].bbox_;
+                int x = r.x + r.width/2;
+                int y = r.y + r.height/2;
+                rs[i].grow(img, rs[i].pixels_[0]);
+            }
+            {
+                Mat tmp = Mat::zeros(img.size(), CV_8UC3);
+                drawMSERs(tmp, &rs, true, &img, true);
+                char buf[100]; sprintf(buf, "out1/%s.%d.mser--.jpg", argv[1], step);
+                imwrite(buf, tmp);
+            }
+        }
+
         //t = cvGetTickCount() - t;
         //cout << "Regions filled in " << t/((double)cvGetTickFrequency()*1000.) << " ms." << endl;
         //t = (double)cvGetTickCount();
@@ -302,7 +320,7 @@ int main( int argc, char** argv )
                 lineRect.push_back(getLineRect(regions, lines[i]));
             }
 
-            // regions => better regions
+            /*/ regions => better regions
             {
                 for(int i=0; i<lines.size(); i++){
                     if(lines[i].size()<1) continue;
@@ -329,7 +347,7 @@ int main( int argc, char** argv )
                     sprintf(buf, "out1/%s.mser.%d.png", argv[1], i);
                     imwrite(buf, ttmp);
                 }
-            }
+            }*/
 
             Mat tmp = Mat::zeros(img.size(), CV_8UC3);
             drawClusters(tmp, &regions, &lines);

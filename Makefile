@@ -148,6 +148,30 @@ afterline.cpp.s:
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/afterline.cpp.s
 .PHONY : afterline.cpp.s
 
+extend.o: extend.cpp.o
+.PHONY : extend.o
+
+# target to build an object file
+extend.cpp.o:
+	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/extend.cpp.o
+.PHONY : extend.cpp.o
+
+extend.i: extend.cpp.i
+.PHONY : extend.i
+
+# target to preprocess a source file
+extend.cpp.i:
+	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/extend.cpp.i
+.PHONY : extend.cpp.i
+
+extend.s: extend.cpp.s
+.PHONY : extend.s
+
+# target to generate assembly for a file
+extend.cpp.s:
+	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/extend.cpp.s
+.PHONY : extend.cpp.s
+
 fast_clustering.o: fast_clustering.cpp.o
 .PHONY : fast_clustering.o
 
@@ -401,6 +425,9 @@ help:
 	@echo "... afterline.o"
 	@echo "... afterline.i"
 	@echo "... afterline.s"
+	@echo "... extend.o"
+	@echo "... extend.i"
+	@echo "... extend.s"
 	@echo "... fast_clustering.o"
 	@echo "... fast_clustering.i"
 	@echo "... fast_clustering.s"

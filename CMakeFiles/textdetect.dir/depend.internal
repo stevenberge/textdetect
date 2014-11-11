@@ -13,6 +13,9 @@ CMakeFiles/textdetect.dir/afterline.cpp.o
  /home/x/textdetect/region.h
  /home/x/textdetect/region_classifier.h
  /home/x/textdetect/utils.h
+CMakeFiles/textdetect.dir/extend.cpp.o
+ /home/x/textdetect/extend.cpp
+ /home/x/textdetect/extend.h
 CMakeFiles/textdetect.dir/fast_clustering.cpp.o
  /home/x/textdetect/fast_clustering.cpp
 CMakeFiles/textdetect.dir/group_classifier.cpp.o

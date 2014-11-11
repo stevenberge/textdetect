@@ -5,6 +5,7 @@
 #include <opencv/highgui.h>
 #include <opencv2/opencv.hpp>
 #include <vector>
+#include <queue>
 #include <stdint.h>
 
 /// A Maximally Stable Extremal Region.
@@ -72,6 +73,41 @@ public:
   float classifier_votes_; ///< Votes of the Region_Classifier for this region
   void inflexion();
   void merge(Region * child);
+
+  void grow(cv::Mat &img, int p,  int threshold=20){
+      static int dr[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+      assert (img.channels() == 3);
+      int w = img.cols, h = img.rows;
+
+      std::queue<cv::Point> que;
+      std::vector<int> my_vec;
+      uchar *data = img.data;
+      bool *visit = new bool[w*h];
+      memset(visit, 0, sizeof(bool)*w*h);
+
+      int x = p/w, y=p%w, z = p;
+      my_vec.push_back(z), que.push(cv::Point(x, y)), visit[z] = true;
+
+      while(!que.empty()){
+          cv::Point p=que.front(); que.pop();
+          int x = p.x, y=p.y, z = x*w + y;
+          uchar a = data[z*3], b = data[z*3+1], c = data[z*3+2];
+          uchar *data = img.data;
+
+          for(int i=0; i<4; i++){
+              int x1 = x+dr[i][0], y1 = y+dr[i][1], z1 = x1*w + y1;
+              if(x1>=0 && x1<w && y1>=0 && y1<h && !visit[x1*w+y1]){
+                  uchar a1 = data[z1*3], b1 = data[z1*3+1], c1 = data[z1*3+2];
+                  if(abs(a1-a)+abs(b1-b)+abs(c1-c) < threshold){
+                      my_vec.push_back(z1), que.push(cv::Point(x1, y1));
+                      visit[z1] = true;
+                  }
+              }
+          }
+      }
+      this->pixels_ = my_vec;
+      delete []visit;
+  }
 
 private:
   bool stable_; // Flag indicating if the region is stable

@@ -105,6 +105,8 @@ opencv2/opencv.hpp
 -
 vector
 -
+queue
+-
 stdint.h
 -
 

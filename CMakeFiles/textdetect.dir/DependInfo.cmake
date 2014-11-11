@@ -5,6 +5,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
   "/home/x/textdetect/afterline.cpp" "/home/x/textdetect/CMakeFiles/textdetect.dir/afterline.cpp.o"
+  "/home/x/textdetect/extend.cpp" "/home/x/textdetect/CMakeFiles/textdetect.dir/extend.cpp.o"
   "/home/x/textdetect/fast_clustering.cpp" "/home/x/textdetect/CMakeFiles/textdetect.dir/fast_clustering.cpp.o"
   "/home/x/textdetect/group_classifier.cpp" "/home/x/textdetect/CMakeFiles/textdetect.dir/group_classifier.cpp.o"
   "/home/x/textdetect/max_meaningful_clustering.cpp" "/home/x/textdetect/CMakeFiles/textdetect.dir/max_meaningful_clustering.cpp.o"
