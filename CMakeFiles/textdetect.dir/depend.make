@@ -5,6 +5,7 @@ CMakeFiles/textdetect.dir/afterline.cpp.o: afterline.cpp
 CMakeFiles/textdetect.dir/afterline.cpp.o: extend.h
 CMakeFiles/textdetect.dir/afterline.cpp.o: fast_clustering.cpp
 CMakeFiles/textdetect.dir/afterline.cpp.o: group_classifier.h
+CMakeFiles/textdetect.dir/afterline.cpp.o: groups.h
 CMakeFiles/textdetect.dir/afterline.cpp.o: max_meaningful_clustering.h
 CMakeFiles/textdetect.dir/afterline.cpp.o: min_bounding_box.h
 CMakeFiles/textdetect.dir/afterline.cpp.o: mser.h

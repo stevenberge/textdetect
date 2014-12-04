@@ -34,5 +34,6 @@ HEADERS += \
     min_bounding_box.h \
     max_meaningful_clustering.h \
     group_classifier.h\
-    extend.h
+    extend.h \
+    groups.h
 

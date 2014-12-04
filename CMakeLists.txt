@@ -9,7 +9,7 @@ ENDIF()
 find_package(OpenCV REQUIRED)
 
 ADD_EXECUTABLE(textdetect extend.cpp fast_clustering.cpp group_classifier.cpp afterline.cpp max_meaningful_clustering.cpp min_bounding_box.cpp mser.cpp nfa.cpp region_classifier.cpp region.cpp)
-ADD_EXECUTABLE(mser fast_clustering.cpp group_classifier.cpp test_mser.cpp max_meaningful_clustering.cpp min_bounding_box.cpp mser.cpp nfa.cpp region_classifier.cpp region.cpp)
+ADD_EXECUTABLE(mser extend.cpp fast_clustering.cpp group_classifier.cpp test_mser.cpp max_meaningful_clustering.cpp min_bounding_box.cpp mser.cpp nfa.cpp region_classifier.cpp region.cpp)
 
 FIND_PACKAGE(OpenCV REQUIRED)
 IF(OpenCV_FOUND)

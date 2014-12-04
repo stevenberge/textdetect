@@ -6,6 +6,7 @@ CMakeFiles/textdetect.dir/afterline.cpp.o
  /home/x/textdetect/extend.h
  /home/x/textdetect/fast_clustering.cpp
  /home/x/textdetect/group_classifier.h
+ /home/x/textdetect/groups.h
  /home/x/textdetect/max_meaningful_clustering.h
  /home/x/textdetect/min_bounding_box.h
  /home/x/textdetect/mser.h

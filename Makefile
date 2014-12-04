@@ -153,6 +153,7 @@ extend.o: extend.cpp.o
 
 # target to build an object file
 extend.cpp.o:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/extend.cpp.o
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/extend.cpp.o
 .PHONY : extend.cpp.o
 
@@ -161,6 +162,7 @@ extend.i: extend.cpp.i
 
 # target to preprocess a source file
 extend.cpp.i:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/extend.cpp.i
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/extend.cpp.i
 .PHONY : extend.cpp.i
 
@@ -169,6 +171,7 @@ extend.s: extend.cpp.s
 
 # target to generate assembly for a file
 extend.cpp.s:
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/extend.cpp.s
 	$(MAKE) -f CMakeFiles/textdetect.dir/build.make CMakeFiles/textdetect.dir/extend.cpp.s
 .PHONY : extend.cpp.s
 

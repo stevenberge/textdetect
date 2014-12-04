@@ -13,11 +13,55 @@ Region::Region(int level, int pixel) : level_(level), pixel_(pixel), area_(0),
 {
     fill_n(moments_, 5, 0.0);
 }
+struct PointCMP{
+    bool operator()(const Point& a, const Point &b){
+        return a.x<b.x || a.x==b.x && a.y<b.y;
+    }
+}pcmp;
+
+inline bool isOnEdge(set<int> &area,int s,int width){
+  int x=s/width,y=s%width;
+  int t;
+  t=(x-1)*width+y;
+  if(area.find(t)==area.end()) return true;
+
+  t=x*width+(y+1);
+  if(area.find(t)==area.end()) return true;
+
+  t=(x+1)*width+y;
+  if(area.find(t)==area.end()) return true;
+
+  t=x*width+(y-1);
+  if(area.find(t)==area.end()) return true;
+  return false;
+}
 //@laoxu
-void Region::inflexion(){
+void Region::inflexion(int cols){
+    set<int> area;
+    Region & r = *this;
+    for (int p=0; p<pixels_.size(); p++){
+        int j= r.pixels_.at(p);
+        area.insert(j);
+      }
+    // cout<<"region "<<i<<" size "<<regions->at(i).pixels_.size()<<endl;
+    for (int p=0; p<r.pixels_.size(); p++)
+    {
+        int j=r.pixels_.at(p);
+        if(isOnEdge(area,j,cols)){
+            contour_.push_back(Point(j/cols, j%cols));
+        }
+    }
+
     vector<Point>& contour_poly=contour_;
+    //sort(contour_.begin(), contour_.end(), pcmp);
+    vector<Point> ss;
+//    for(int i = 0; i<contour_.size(); i++){
+//        Point & p = contour_.at(i);
+//        cout<<" ("<<p.x<<","<<p.y<<") ";
+//    }cout<<endl;
     bool was_convex=false;
     int num_inflexion_points=0;
+    // cout<<"inflex with "<<contour_.size()<<" points"<<endl;
     for (int p = 0 ; p<(int)contour_poly.size(); p++)
     {
         int p_prev = p-1;
@@ -336,6 +380,43 @@ done_all_neighbors : ;
 
     return;
 }
+void Region::grow(cv::Mat &img,  int threshold){
+    static int dr[8][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, -1}, {1, 1}, {-1, -1}, {-1, 1}};
+    assert (img.channels() == 3);
+    int w = img.cols, h = img.rows;
+
+    std::queue<cv::Point> que;
+    std::vector<int> my_vec;
+    uchar *data = img.data;
+    bool *visit = new bool[w*h];
+    memset(visit, 0, sizeof(bool)*w*h);
+
+    for(int i=0; i<this->pixels_.size(); i+=5){
+        int p = this->pixels_[i];
+        int x = p%w, y=p/w, z = p;
+        my_vec.push_back(z), que.push(cv::Point(x, y)), visit[z] = true;
+    }
+
+    while(!que.empty()){
+        cv::Point p=que.front(); que.pop();
+        int x = p.x, y=p.y, z = y*w + x;
+        uchar a = data[z*3], b = data[z*3+1], c = data[z*3+2];
+        uchar *data = img.data;
+
+        for(int i=0; i<8; i++){
+            int x1 = x+dr[i][0], y1 = y+dr[i][1], z1 = y1*w + x1;
+            if(x1>=0 && x1<w && y1>=0 && y1<h && !visit[y1*w+x1]){
+                uchar a1 = data[z1*3], b1 = data[z1*3+1], c1 = data[z1*3+2];
+                if(abs(a1-a)+abs(b1-b)+abs(c1-c) < threshold){
+                    my_vec.push_back(z1), que.push(cv::Point(x1, y1));
+                    visit[z1] = true;
+                }
+            }
+        }
+    }
+    this->pixels_ = my_vec;
+    delete []visit;
+}
 
 void Region::extract_features(Mat& _lab_img, Mat& _grey_img, Mat& _gradient_magnitude)
 {
@@ -380,7 +461,7 @@ void Region::extract_features(Mat& _lab_img, Mat& _grey_img, Mat& _gradient_magn
 
     Mat tmp; //, tmp1=bw.clone(), tmp2_=bw.clone(); //, tmp1 = bw.clone();
     distanceTransform(bw, tmp, CV_DIST_L1, 3); //L1 gives distance in round integers while L2 floats
-
+    distanceTransform(bw, tmp, CV_DIST_L2, 3);
    // xihua(tmp, xh);
 
 
@@ -398,7 +479,10 @@ void Region::extract_features(Mat& _lab_img, Mat& _grey_img, Mat& _gradient_magn
 //    sprintf(buf, "out1/%d.xihuamsk.png", i);
 //    imwrite(buf, xh);
 //    cout<<i<<":"<<endl;
-//    printImg(tmp, false);
+   // cout<<"original:"<<endl;
+   // printImg(bw, false);
+   // cout<<"ds:"<<endl;
+   // printImg(tmp, false);
     meanStdDev(tmp,mean,std,bw);
 
     stroke_mean_ = mean[0];

@@ -1,4 +1,5 @@
 FILE(REMOVE_RECURSE
+  "CMakeFiles/mser.dir/extend.cpp.o"
   "CMakeFiles/mser.dir/fast_clustering.cpp.o"
   "CMakeFiles/mser.dir/group_classifier.cpp.o"
   "CMakeFiles/mser.dir/test_mser.cpp.o"

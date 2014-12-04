@@ -50,22 +50,7 @@ static uchar bcolors[][3] =
   {255,0,255},
   {255,255,255}
 };
-inline bool isOnEdge(set<int> &area,int s,int width,int height){
-  int x=s/width,y=s%width;
-  int t;
-  t=(x-1)*width+y;
-  if(area.find(t)==area.end()) return true;
 
-  t=x*width+(y+1);
-  if(area.find(t)==area.end()) return true;
-
-  t=(x+1)*width+y;
-  if(area.find(t)==area.end()) return true;
-
-  t=x*width+(y-1);
-  if(area.find(t)==area.end()) return true;
-  return false;
-}
 //
 void drawText(Mat &img,Region &region,char* str,int width,double hScale,double vScale,int h,int r, int g, int b){
   CvFont font;
@@ -128,34 +113,19 @@ void drawMSERs(Mat& img, vector<Region> *regions, bool fill, Mat *orImg, bool si
   //img = img*0;
   int w=img.cols,h=img.rows;
   uchar* rsptr = (uchar*)img.data;
-  // for(int j=0;j<img.cols*img.rows;j++){
-  // rsptr[j*3]=0;
-  // rsptr[j*3+1]=0;
-  // rsptr[j*3+2]=0;
-  // }
+  if(fill)
   for (int i=0; i<regions->size(); i++)
     {
+      Region & r = regions->at(i);
       set<int> area;
       for (int p=0; p<regions->at(i).pixels_.size(); p++){
           int j=regions->at(i).pixels_.at(p);
           area.insert(j);
         }
-      int red=i%3==0?255:0;
-      int blue=i%3==1?255:0;
-      int green=i%3==2?255:0;
       // cout<<"region "<<i<<" size "<<regions->at(i).pixels_.size()<<endl;
       for (int p=0; p<regions->at(i).pixels_.size(); p++)
         {
           int j=regions->at(i).pixels_.at(p);
-          if(!fill & isOnEdge(area,j,w,h)){
-              rsptr[j*3] = blue;//bcolors[i%9][2];
-              rsptr[j*3+1] = green;//bcolors[i%9][1];
-              rsptr[j*3+2] = red;//bcolors[i%9][0];
-              continue;
-            }
-          if(!fill){
-              continue;
-            }
           if(singleColor){
               rsptr[j*3] = 255; // (j*30%255);//255;//bcolors[i%9][2];
               rsptr[j*3+1] = 255;//bcolors[i%9][1];
@@ -167,6 +137,24 @@ void drawMSERs(Mat& img, vector<Region> *regions, bool fill, Mat *orImg, bool si
               rsptr[j*3+2] =  ssptr[j*3+2] ;
             }
         }
+    }
+  if(!fill){
+      int cols = img.cols;
+      vector<vector<Point> > contours;
+      for (int i=0; i<regions->size(); i++)
+      {
+            Region & r = regions->at(i);
+            //vector<Point> ps;
+            for(int k = 0; k < r.contour_.size(); k++){
+                Point & p = r.contour_[k];
+                int j = p.x * cols + p.y;
+                rsptr[j*3] = 255;
+                rsptr[j*3+1] = 255 ;
+                rsptr[j*3+2] =  255 ;
+            }
+      }
+      for (int i=0; i<regions->size(); i++)
+        cv::drawContours(img, contours, i, Scalar(255, 255, 255));
     }
 }
 void drawRects(Mat &canvas,vector<cv::Rect> &rects,Scalar scalar,int thickness);
@@ -527,25 +515,6 @@ void unique(vector<Region>& regions, int mid, vector<int> &remain){
         if(j==n) remain.push_back(i);
     }
 }
-
-float groupVar(vector<Region> &regions, vector<int> & group){
-  float stroke_mean=0, stroke_var=0, stroke_var1=0;
-  for(int i=0; i<group.size(); i++){
-    int k=group[i];
-    stroke_mean+=regions[k].stroke_mean_;
-  }
-  stroke_mean/=group.size();
-  //cout<<"stroke_mean:"<<stroke_mean<<endl;
-  for(int i=0; i<group.size(); i++){
-    int k=group[i];
-    stroke_var+=regions[k].stroke_var_;
-    stroke_var1+=pow(regions[k].stroke_mean_-stroke_mean, 2);
-  }
-  return (stroke_var1/group.size()+stroke_var)/stroke_mean;
-}
-
-
-
 
 
 #endif

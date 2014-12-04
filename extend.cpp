@@ -333,29 +333,6 @@ void thin2(Mat& bwImg)
     cout<<"thin2 end"<<endl;
 }
 
-
-float groupScore(vector<vector<float> > &graph, vector<int> &group){
-    int N=group.size();
-    vector<vector<float> > sims(N, vector<float>(N,0));
-    float t=0;
-    for(int i=0; i<N; i++){
-        int pi = group[i];
-        float ti=0;
-        float tn=0;
-        for(int j=0; j<N; j++){
-            int pj = group[j];
-            tn += graph[pi][pj];
-        }
-        //        ti=scores[i]/100;
-        //        ti*=tn;
-        t+=tn;
-    }
-    float s = t/pow(N, 0.4);
-    //cout<<"sum:"<<t<<" sim:"<<s<<endl;
-    return s;
-}
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void xihua(const Mat &o, Mat &tmp){
     tmp = Mat::zeros(o.size(), CV_8UC1);

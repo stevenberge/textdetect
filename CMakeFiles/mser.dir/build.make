@@ -49,9 +49,32 @@ include CMakeFiles/mser.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/mser.dir/flags.make
 
+CMakeFiles/mser.dir/extend.cpp.o: CMakeFiles/mser.dir/flags.make
+CMakeFiles/mser.dir/extend.cpp.o: extend.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_1)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/mser.dir/extend.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/mser.dir/extend.cpp.o -c /home/x/textdetect/extend.cpp
+
+CMakeFiles/mser.dir/extend.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mser.dir/extend.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/x/textdetect/extend.cpp > CMakeFiles/mser.dir/extend.cpp.i
+
+CMakeFiles/mser.dir/extend.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mser.dir/extend.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/x/textdetect/extend.cpp -o CMakeFiles/mser.dir/extend.cpp.s
+
+CMakeFiles/mser.dir/extend.cpp.o.requires:
+.PHONY : CMakeFiles/mser.dir/extend.cpp.o.requires
+
+CMakeFiles/mser.dir/extend.cpp.o.provides: CMakeFiles/mser.dir/extend.cpp.o.requires
+	$(MAKE) -f CMakeFiles/mser.dir/build.make CMakeFiles/mser.dir/extend.cpp.o.provides.build
+.PHONY : CMakeFiles/mser.dir/extend.cpp.o.provides
+
+CMakeFiles/mser.dir/extend.cpp.o.provides.build: CMakeFiles/mser.dir/extend.cpp.o
+
 CMakeFiles/mser.dir/fast_clustering.cpp.o: CMakeFiles/mser.dir/flags.make
 CMakeFiles/mser.dir/fast_clustering.cpp.o: fast_clustering.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/mser.dir/fast_clustering.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/mser.dir/fast_clustering.cpp.o -c /home/x/textdetect/fast_clustering.cpp
 
@@ -74,7 +97,7 @@ CMakeFiles/mser.dir/fast_clustering.cpp.o.provides.build: CMakeFiles/mser.dir/fa
 
 CMakeFiles/mser.dir/group_classifier.cpp.o: CMakeFiles/mser.dir/flags.make
 CMakeFiles/mser.dir/group_classifier.cpp.o: group_classifier.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/mser.dir/group_classifier.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/mser.dir/group_classifier.cpp.o -c /home/x/textdetect/group_classifier.cpp
 
@@ -97,7 +120,7 @@ CMakeFiles/mser.dir/group_classifier.cpp.o.provides.build: CMakeFiles/mser.dir/g
 
 CMakeFiles/mser.dir/test_mser.cpp.o: CMakeFiles/mser.dir/flags.make
 CMakeFiles/mser.dir/test_mser.cpp.o: test_mser.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_3)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_4)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/mser.dir/test_mser.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/mser.dir/test_mser.cpp.o -c /home/x/textdetect/test_mser.cpp
 
@@ -120,7 +143,7 @@ CMakeFiles/mser.dir/test_mser.cpp.o.provides.build: CMakeFiles/mser.dir/test_mse
 
 CMakeFiles/mser.dir/max_meaningful_clustering.cpp.o: CMakeFiles/mser.dir/flags.make
 CMakeFiles/mser.dir/max_meaningful_clustering.cpp.o: max_meaningful_clustering.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_4)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_5)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/mser.dir/max_meaningful_clustering.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/mser.dir/max_meaningful_clustering.cpp.o -c /home/x/textdetect/max_meaningful_clustering.cpp
 
@@ -143,7 +166,7 @@ CMakeFiles/mser.dir/max_meaningful_clustering.cpp.o.provides.build: CMakeFiles/m
 
 CMakeFiles/mser.dir/min_bounding_box.cpp.o: CMakeFiles/mser.dir/flags.make
 CMakeFiles/mser.dir/min_bounding_box.cpp.o: min_bounding_box.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_5)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_6)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/mser.dir/min_bounding_box.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/mser.dir/min_bounding_box.cpp.o -c /home/x/textdetect/min_bounding_box.cpp
 
@@ -166,7 +189,7 @@ CMakeFiles/mser.dir/min_bounding_box.cpp.o.provides.build: CMakeFiles/mser.dir/m
 
 CMakeFiles/mser.dir/mser.cpp.o: CMakeFiles/mser.dir/flags.make
 CMakeFiles/mser.dir/mser.cpp.o: mser.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_6)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_7)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/mser.dir/mser.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/mser.dir/mser.cpp.o -c /home/x/textdetect/mser.cpp
 
@@ -189,7 +212,7 @@ CMakeFiles/mser.dir/mser.cpp.o.provides.build: CMakeFiles/mser.dir/mser.cpp.o
 
 CMakeFiles/mser.dir/nfa.cpp.o: CMakeFiles/mser.dir/flags.make
 CMakeFiles/mser.dir/nfa.cpp.o: nfa.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_7)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_8)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/mser.dir/nfa.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/mser.dir/nfa.cpp.o -c /home/x/textdetect/nfa.cpp
 
@@ -212,7 +235,7 @@ CMakeFiles/mser.dir/nfa.cpp.o.provides.build: CMakeFiles/mser.dir/nfa.cpp.o
 
 CMakeFiles/mser.dir/region_classifier.cpp.o: CMakeFiles/mser.dir/flags.make
 CMakeFiles/mser.dir/region_classifier.cpp.o: region_classifier.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_8)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_9)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/mser.dir/region_classifier.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/mser.dir/region_classifier.cpp.o -c /home/x/textdetect/region_classifier.cpp
 
@@ -235,7 +258,7 @@ CMakeFiles/mser.dir/region_classifier.cpp.o.provides.build: CMakeFiles/mser.dir/
 
 CMakeFiles/mser.dir/region.cpp.o: CMakeFiles/mser.dir/flags.make
 CMakeFiles/mser.dir/region.cpp.o: region.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_9)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/x/textdetect/CMakeFiles $(CMAKE_PROGRESS_10)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/mser.dir/region.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/mser.dir/region.cpp.o -c /home/x/textdetect/region.cpp
 
@@ -258,6 +281,7 @@ CMakeFiles/mser.dir/region.cpp.o.provides.build: CMakeFiles/mser.dir/region.cpp.
 
 # Object files for target mser
 mser_OBJECTS = \
+"CMakeFiles/mser.dir/extend.cpp.o" \
 "CMakeFiles/mser.dir/fast_clustering.cpp.o" \
 "CMakeFiles/mser.dir/group_classifier.cpp.o" \
 "CMakeFiles/mser.dir/test_mser.cpp.o" \
@@ -271,6 +295,7 @@ mser_OBJECTS = \
 # External object files for target mser
 mser_EXTERNAL_OBJECTS =
 
+mser: CMakeFiles/mser.dir/extend.cpp.o
 mser: CMakeFiles/mser.dir/fast_clustering.cpp.o
 mser: CMakeFiles/mser.dir/group_classifier.cpp.o
 mser: CMakeFiles/mser.dir/test_mser.cpp.o
@@ -289,6 +314,7 @@ mser: CMakeFiles/mser.dir/link.txt
 CMakeFiles/mser.dir/build: mser
 .PHONY : CMakeFiles/mser.dir/build
 
+CMakeFiles/mser.dir/requires: CMakeFiles/mser.dir/extend.cpp.o.requires
 CMakeFiles/mser.dir/requires: CMakeFiles/mser.dir/fast_clustering.cpp.o.requires
 CMakeFiles/mser.dir/requires: CMakeFiles/mser.dir/group_classifier.cpp.o.requires
 CMakeFiles/mser.dir/requires: CMakeFiles/mser.dir/test_mser.cpp.o.requires

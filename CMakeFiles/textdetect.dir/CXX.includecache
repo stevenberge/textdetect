@@ -25,6 +25,8 @@ region_classifier.h
 /home/x/textdetect/region_classifier.h
 group_classifier.h
 /home/x/textdetect/group_classifier.h
+groups.h
+/home/x/textdetect/groups.h
 utils.h
 /home/x/textdetect/utils.h
 extend.h
@@ -67,6 +69,8 @@ region.h
 /home/x/textdetect/region.h
 region_classifier.h
 /home/x/textdetect/region_classifier.h
+
+/home/x/textdetect/groups.h
 
 /home/x/textdetect/max_meaningful_clustering.h
 vector

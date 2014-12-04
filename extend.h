@@ -18,7 +18,9 @@ void scantable(IplImage *src);
 void cvHilditchThin(cv::Mat& src, cv::Mat& dst);
 
 void mask(Mat&src, Mat&dst, int n=10);
-float groupScore(vector<vector<float> > &graph,  vector<int> &group);
+
+
+
 
 //void mask(Mat &src, Mat &dst);
 #endif
