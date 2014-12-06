@@ -306,6 +306,21 @@ mser: CMakeFiles/mser.dir/nfa.cpp.o
 mser: CMakeFiles/mser.dir/region_classifier.cpp.o
 mser: CMakeFiles/mser.dir/region.cpp.o
 mser: CMakeFiles/mser.dir/build.make
+mser: /usr/lib/libopencv_calib3d.so
+mser: /usr/lib/libopencv_contrib.so
+mser: /usr/lib/libopencv_core.so
+mser: /usr/lib/libopencv_features2d.so
+mser: /usr/lib/libopencv_flann.so
+mser: /usr/lib/libopencv_highgui.so
+mser: /usr/lib/libopencv_imgproc.so
+mser: /usr/lib/libopencv_legacy.so
+mser: /usr/lib/libopencv_ml.so
+mser: /usr/lib/libopencv_objdetect.so
+mser: /usr/lib/libopencv_photo.so
+mser: /usr/lib/libopencv_stitching.so
+mser: /usr/lib/libopencv_ts.so
+mser: /usr/lib/libopencv_video.so
+mser: /usr/lib/libopencv_videostab.so
 mser: CMakeFiles/mser.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable mser"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/mser.dir/link.txt --verbose=$(VERBOSE)

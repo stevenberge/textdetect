@@ -17,7 +17,6 @@
 
 #define DECISION_THRESHOLD_EA 0.5
 #define DECISION_THRESHOLD_SF 0.999999999
-#define cout if(COUT)cout
 
 using namespace std;
 using namespace cv;
@@ -154,7 +153,7 @@ void getLineRects(const vector<Region> &regions, const vector<int> &line, vector
 
 int main( int argc, char** argv )
 {
-    bool COUT = true;
+    char buf[100];
     Mat img, grey, lab_img, gradient_magnitude, segmentation, all_segmentations;
     vector<Region> regions; vector<Rect> rects;
     //::MSER mser8(true,20,0.00008,0.03,1,0.7);
@@ -163,7 +162,7 @@ int main( int argc, char** argv )
     if(argc>3) sscanf(argv[3], "%d", &thr);
     cout<<"threshold:"<<thr<<endl;
     //::MSER mser8(true, thr,0.00008,0.005,1,0.7);
-    ::MSER mser8(true, thr,0.00005,0.08,1,0.7);
+    ::MSER mser8(true, thr,0.00008,0.08,1,0.7);
     RegionClassifier region_boost("boost_train/trained_boost_char.xml", 0);
     GroupClassifier  group_boost("boost_train/trained_boost_groups.xml", &region_boost);
 
@@ -199,7 +198,8 @@ int main( int argc, char** argv )
 
 
         for (int i=0; i<regions.size(); i++)
-            regions[i].er_fill(grey), regions[i].inflexion(grey.cols);
+            regions[i].er_fill(grey),
+            regions[i].extract_features(lab_img, grey, gradient_magnitude);
         {
             Mat tmp = Mat::zeros(img.size(), CV_8UC3);
             drawMSERs(tmp, &regions, true, &img, true);
@@ -225,16 +225,28 @@ int main( int argc, char** argv )
         //cout << "Regions filled in " << t/((double)cvGetTickFrequency()*1000.) << " ms." << endl;
         //t = (double)cvGetTickCount();
 
+        ////// dots
+        vector<Region> dots;
+        for(int i= 0; i<regions.size(); i++){
+            if(isDotStroke(regions[i])) dots.push_back(regions[i]);
+        }
+        {
+            Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+            fillRegions(tmp, dots);
+            char buf[100]; sprintf(buf, "out1/%s.%d.dots.png", argv[1], step);
+            imwrite(buf, tmp);
+        }
+
         double max_stroke = 0;
         vector<Region> erased;
         for (int i=regions.size()-1; i>=0; i--)
         {
             Region &r=regions.at(i);
-            r.extract_features(lab_img, grey, gradient_magnitude);  //|| (r.bbox_.width <=1)
+            //|| (r.bbox_.width <=1)
             if ( (r.stroke_std_/r.stroke_mean_ > 0.8) || (r.num_holes_>3)  || (r.bbox_.height <=2) || r.area_ <=4
-                 || (r.bbox_.width > 8.5*r.bbox_.height) || r.stroke_mean_>0.3*r.bbox_.height ){
+                 || (r.bbox_.width > 8.5*r.bbox_.height)  ){//|| r.stroke_mean_>0.3*r.bbox_.height
                 if(r.stroke_mean_>0.3*r.bbox_.height)   {
-                    erased.push_back(r);
+                //    erased.push_back(r);
                     //cout<<"mean width:"<<r.stroke_mean_<<" std width:"<<r.stroke_std_<<" width var"<<r.stroke_var_<<" region height:"<<r.bbox_.height<<endl;
                 }
                 erased.push_back(r);
@@ -258,6 +270,7 @@ int main( int argc, char** argv )
         /////////
         cout<<"calculate graph"<<endl;
         int N = regions.size();
+
         vector<vector<float> > graph(N, vector<float>(N, 0));
         vector<vector<bool> > sameline(N, vector<bool>(N, false));
         {
@@ -366,7 +379,7 @@ int main( int argc, char** argv )
                 }
                 //cout<<"group "<<j<<":"<<endl;
                 int n = line.size();
-                cout<<"#line"<<i<<" : n="<< line.size()<<endl ;
+                cout<<"line"<<i<<" : n="<< line.size()<<endl ;
                 if(n>1)
                 {
                     {
@@ -394,7 +407,7 @@ int main( int argc, char** argv )
 //                        final_lines.push_back(line);
 //                    }
                     g/=n;
-                    if(n<2 && g>0.009) continue;
+                    if(n<2 && g>0.005) continue;
                     if(f>=200 && g<=0.01 && h>=0.1 || f>120 && g<=0.01
                             || f>150 && g<=0.02 || f>400 && g<0.01 || h>DECISION_THRESHOLD_SF*2/3 || g<0.02 && k){
                         cout<<"#line"<<i<<" : n="<< line.size() <<", f="<<f<<", g="<<g<<", h="<<h<<", k="<<k<<endl;
@@ -633,6 +646,26 @@ int main( int argc, char** argv )
                 int i=*it;
                 final_regions.push_back(regions[i]);
             }
+
+            ///// getback dots
+            vector<int> hors;
+            for(int i = 0; i<final_regions.size(); i++){
+                if(isHorizonStroke(final_regions[i], region_boost)){
+                    hors.push_back(i);
+                    for(int j = 0; j<dots.size(); j++){
+                        if(isI(dots[j], final_regions[i])){
+                            final_regions.push_back(dots[j]);
+                        }
+                    }
+                }
+            }
+            {
+                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+                fillRegions(tmp, final_regions, hors);
+                sprintf(buf, "out1/%s.%d.hors.png", argv[1], step);
+                imwrite(buf, tmp);
+            }
+
             if( step == 1) mid=final_regions.size()-1;
         }
         cout<<"store line regions"<<endl;

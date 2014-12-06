@@ -43,8 +43,9 @@ bool groupSco(RegionClassifier &region_boost, vector<Region> &regions, vector<in
 }
 
 bool groupLs(vector<Region> &regions, vector<int> &group, int idx){
-    float votes=0, sw_td=0, xl_sw = 0, n_hl = 0, n_r = 0, n_if = 0, n_ni =0;
+    float votes=0, sw_td=0, xl_sw = 0, n_hl = 0, n_r = 0, n_if = 0, n_ni =0, n_hw = 0;
     int N = group.size();
+    float sw_var = 0;
     vector<float> xls(N, 0), wd(N, 0), hg(N, 0);
     for(int j = 0; j<group.size(); j++){
         int i = group[j];
@@ -53,24 +54,30 @@ bool groupLs(vector<Region> &regions, vector<int> &group, int idx){
         //float vt= region_boost.get_votes(&r);
         //votes += vt;
         if(r.area_<0.85*r.bbox_.width*r.bbox_.height) n_ni++;
-        if(r.area_>9) n_r++;
+        if(r.area_>8) n_r++;
         //if(r.stroke_std_/r.stroke_mean_<0.4) sw_td++;
-        if(xl<30*r.stroke_mean_) xl_sw++;
+        //if(xl<30*r.stroke_mean_) xl_sw++;
+         if(xl* r.stroke_mean_*1.35 < r.area_) xl_sw++;
         if(r.num_holes_>0 && r.num_holes_<3) n_hl++;
-        if(r.inflexion_num_>2) n_if ++;
+        if(r.bbox_.height < 3*r.bbox_.width && r.bbox_.height*1.5 >= r.bbox_.width) n_hw ++;
+        //if(r.inflexion_num_>2) n_if ++;
         xls[j] = xl;
         wd[j] = r.bbox_.width, hg[j] = r.bbox_.height;
+        sw_var += r.stroke_std_/(r.area_);
     }
-    sw_td/=N, xl_sw/=N, n_hl/=N, n_r/=N, n_if/=N, n_ni/=N;
-    cout<<"line"<<idx<<" sw_td:"<<sw_td<<" xl_sw:"<<xl_sw<<" n_hl:"<<n_hl<<" n_r:"<<n_r<<" n_if:"<<n_if<<" n_ni:"<<n_ni<<endl;
+    sw_td/=N, xl_sw/=N, n_hl/=N, n_r/=N, n_if/=N, n_ni/=N, n_hw/=N;
+    sw_var/=N;
+    cout<<"line"<<idx<<" sw_td:"<<sw_td<<" xl_sw:"<<xl_sw<<" n_hl:"<<n_hl<<" n_r:"<<n_r<<" n_if:"<<n_if<<" n_ni:"<<n_ni<<" n_hw:"<<n_hw<<endl;
     //if(sw_td<0.4) return 0;
     if(xl_sw<0.35) return 0;
     if(n_ni<0.35) return 0;
+    if(n_hw<0.4) return 0;
     //if(n_hl<0.01) return 0;
-    if(n_r<0.3) return 0;
-    ////if(n_if<0.4) return 0;
+    if(n_r<0.5 ) return 0;
+    //if(n_if<0.4) return 0;
+    if(sw_var>0.014) return 0;
 
-    if(N>=10){
+    if(N>=5){
         float hg_var = 0, hg_mean = 0, wd_var = 0, wd_mean = 0;
         for(int i = 0;i<N; i++) hg_mean+=hg[i], wd_mean+=wd[i];
         hg_mean /= N;

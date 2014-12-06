@@ -411,14 +411,14 @@ bool isI(Region &s,Region t){//s is dot
   if((float)t.area_/s.area_<1.5) return false;
   // cout<<"isI:"<<w1<<","<<h1<<"   "<<w2<<","<<h2<<endl;
   //stroke width ratio
-  if(w1/w2>1.45||w2/w1>10) return false;
+  if(w1/w2>1.6||w2/w1>10) return false;
   //height ratio
   if(h2/h1<1.7) return false;
   float x1=s.bbox_x1_+w1/2;//,y1=s.bbox_y1_+h1/2;
   float x2=t.bbox_x1_+w2/2;//,y2=t.bbox_y1_+h2/2;
   //distance
-  if(abs(x1-x2)>w2
-     ||s.bbox_y2_>t.bbox_y1_
+  if(abs(x1-x2)>w2*1.2
+     ||s.bbox_y1_+h1*2/3 >t.bbox_y1_
      ||t.bbox_y1_-s.bbox_y2_>max(h1,h2))
     return false;
   // cout<<"yes. is I"<<endl;
@@ -440,12 +440,16 @@ void genDimVector(const Mat &co_occurrence_matrix,t_float* D){
 
 //judge for I
 bool isDotStroke(Region &s){
+    if(s.area_<10) return true;
   if(s.num_holes_>0) return false;
+  return true;
   float w1=s.bbox_.width,h1=s.bbox_.height;
+  if(s.area_<7) return true;
   //shape
-  if(w1/h1>2||h1/w1>2) return false;
+  if(w1/h1>3||h1/w1>3) return false;
   //area
-  if(s.area_<3.14*(w1*w1/4)/2) return false;
+  float xl = pow(w1*w1+h1*h1, 0.5)/2;
+  if(s.area_<3.14*0.5*xl*xl) return false;
   //周长<4tr >=2tr
   // if(perimeterR(s)>13) return false;
   // cout<<"dotstroke:w:"<<w1<<" h:"<<h1<<" area:"<<s.area_<<endl;
