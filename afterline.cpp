@@ -150,6 +150,13 @@ void getLineRects(const vector<Region> &regions, const vector<int> &line, vector
     if(x1>=0) res.push_back(Rect(x1, y1, x2-x1, y2-y1));
     return ;
 }
+bool overlaps(Region &r, set<int> &ps){
+    int n = r.pixels_.size(), cnt = 0;
+    for(int i = 0; i< n; i++){
+        if(ps.count(r.pixels_[i])) cnt++;
+    }
+    return cnt >= 0.7*n;
+}
 
 int main( int argc, char** argv )
 {
@@ -162,7 +169,7 @@ int main( int argc, char** argv )
     if(argc>3) sscanf(argv[3], "%d", &thr);
     cout<<"threshold:"<<thr<<endl;
     //::MSER mser8(true, thr,0.00008,0.005,1,0.7);
-    ::MSER mser8(true, thr,0.00008,0.08,1,0.7);
+
     RegionClassifier region_boost("boost_train/trained_boost_char.xml", 0);
     GroupClassifier  group_boost("boost_train/trained_boost_groups.xml", &region_boost);
 
@@ -174,6 +181,12 @@ int main( int argc, char** argv )
 
     segmentation = Mat::zeros(img.size(),CV_8UC3);
     all_segmentations = Mat::zeros(240,320*11,CV_8UC3);
+
+int thrs[3] = {57, 30, 15};
+ vector<Region> ff_regions;
+ set<int> pixels;
+for(int iii = 0; iii<3; iii++){
+    ::MSER mser8(true, thrs[iii],0.00008,0.08,1,0.7);
 
     vector<Region> final_regions;
     vector<vector<int> > final_lines;
@@ -687,16 +700,18 @@ int main( int argc, char** argv )
         if (step == 2)
         {
             vector<int> res;
-            unique(final_regions, mid, res);
-            {
-                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
-                fillRegions(tmp, final_regions, res);
-                //cvtColor(tmp, tmp, CV_BGR2GRAY);
-                //threshold(tmp,tmp,1,255,CV_THRESH_BINARY);
-                char buf[100];
-                sprintf(buf, "out1/%s.out.png", argv[1]);
-                imwrite(buf, tmp);
-            }
+            unique(final_regions, mid);
+//            {
+//                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+//                fillRegions(tmp, final_regions, res);
+//                //cvtColor(tmp, tmp, CV_BGR2GRAY);
+//                //threshold(tmp,tmp,1,255,CV_THRESH_BINARY);
+//                char buf[100];
+//                sprintf(buf, "out1/%s.out.png", argv[1]);
+//                imwrite(buf, tmp);
+//            }
+
+
             cout<<"paint line regions"<<endl;
             {
                 Mat tmp = Mat::zeros(img.size(), CV_8UC1);
@@ -720,6 +735,22 @@ int main( int argc, char** argv )
         //t_tot = cvGetTickCount() - t_tot;
         //cout << " Total processing for one frame " << t_tot/((double)cvGetTickFrequency()*1000.) << " ms." << endl;
     }
+
+    for(int i = 0; i< final_regions.size(); i++){
+        if(overlaps(final_regions[i], pixels)) continue;
+        ff_regions.push_back(final_regions[i]);
+        for(int j = 0; j<final_regions[i].pixels_.size(); j++)
+            pixels.insert(final_regions[i].pixels_[j]);
+    }
+}
+
+{
+    Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+    fillRegions(tmp, ff_regions);
+    char buf[100];
+    sprintf(buf, "out1/%s.out.png", argv[1]);
+    imwrite(buf, tmp);
+}
 
 }
 

@@ -509,15 +509,17 @@ bool contains(Region &a, Region &b){
     return s.x<=t.x && s.y<=t.y && s.x+s.width>=t.x+t.width &&
             s.y+s.height>=t.y+t.height;
 }
-void unique(vector<Region>& regions, int mid, vector<int> &remain){
+void unique(vector<Region>& regions, int mid){
     int n=regions.size();
+    vector<Region> tmp;
     for(int i=0; i<n; i++){
         int j=0; for(; j<n; j++){
             if(i>mid&&j>mid || i<=mid&&j<=mid) continue;
             if(contains(regions[j], regions[i])) break;
         }
-        if(j==n) remain.push_back(i);
+        if(j==n) tmp.push_back(regions[i]);
     }
+    regions = tmp;
 }
 
 
