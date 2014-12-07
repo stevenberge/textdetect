@@ -25,10 +25,12 @@ region_classifier.h
 /home/x/textdetect/region_classifier.h
 group_classifier.h
 /home/x/textdetect/group_classifier.h
-groups.h
-/home/x/textdetect/groups.h
+list
+-
 utils.h
 /home/x/textdetect/utils.h
+groups.h
+/home/x/textdetect/groups.h
 extend.h
 /home/x/textdetect/extend.h
 
@@ -132,5 +134,7 @@ region.h
 region.h
 /home/x/textdetect/region.h
 set
+-
+list
 -
 

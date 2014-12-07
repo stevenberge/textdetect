@@ -2,6 +2,7 @@
 #define UTILS_H
 #include "region.h"
 #include <set>
+#include <list>
 #define rep(i,n) for(int i=0;i<(int)n;i++)
 void accumulate_evidence(vector<int> *meaningful_cluster, int grow, Mat *co_occurrence)
 {
@@ -239,21 +240,26 @@ void fillRegions(Mat& img, vector<Region> &regions)
   uchar* rsptr = (uchar*)img.data;
   for (int i=0; i<regions.size(); i++)
     {
-      // cout<<"fillregion with size:"<<regions[i].pixels_.size()<<endl;
-      // if(regions[i].pixels_.size()>=870)
-      //printf("fill %d\n",i);
       for (int p=0; p<regions.at(i).pixels_.size(); p++)
         {
           rsptr[regions[i].pixels_.at(p)] = 255;
-//          rsptr[regions[i].pixels_.at(p)*3+1] = color?0:255;//bcolors[i%9][2];
-//          rsptr[regions[i].pixels_.at(p)*3+2] =255;// bcolors[i%9][2];
         }
     }
 }
-// void drawRegionLines(Mat &img,vector<Region> &regions,vector<int> &line){
-// fillRegions(img,regions,line);
 
-// }
+void fillRegions(Mat& img, list<Region> &regions)
+{
+    //img = img*0;
+    uchar* rsptr = (uchar*)img.data;
+    for (list<Region>::iterator it = regions.begin(); it!=regions.end(); it++)
+    {
+      Region & r = *it;
+      for (int p=0; p<r.pixels_.size(); p++)
+        {
+          rsptr[r.pixels_.at(p)] = 255;
+        }
+    }
+}
 
 #define NUM_FEATURES 11 
 //@提取regions的某种feature到data[]
@@ -415,7 +421,7 @@ bool isI(Region &s,Region t){//s is dot
   //height ratio
   if(h2/h1<1.5) return false;
   //distance
-  if(s.bbox_x1_>t.bbox_x2_ + w2/2.0 || s.bbox_x2_ <t.bbox_x1_ - w2/2.0
+  if(s.bbox_x1_>t.bbox_x2_ + w2 || s.bbox_x2_ <t.bbox_x1_ - w2
      ||s.bbox_y2_- t.bbox_y1_ > h1/3.0
      ||t.bbox_y1_ -s.bbox_y2_>  h2)
     return false;
@@ -443,10 +449,9 @@ bool isDotStroke(Region &s){
   float w1=s.bbox_.width,h1=s.bbox_.height;
   //shape
   if(w1/h1>3||h1/w1>3) return false;
-
   //area
-  float xl = pow(w1*w1+h1*h1, 0.5)/2;
-  if(s.area_<3.14*0.66*xl*xl) return false;
+  float xl = pow(w1*w1+h1*h1, 0.5);
+  if(s.area_<0.4*3.14/4*xl*xl) return false;
   //周长<4tr >=2tr
   // if(perimeterR(s)>13) return false;
   // cout<<"dotstroke:w:"<<w1<<" h:"<<h1<<" area:"<<s.area_<<endl;
@@ -501,11 +506,29 @@ void searchIJ(Mat &img,vector<Region> &regions, RegionClassifier &region_boost )
     }
 }
 
+inline int boxArea(Region &a){
+    return a.bbox_.width * a.bbox_.height;
+}
+
 bool overlay(Region &a, Region &b){
     int x1 = max(a.bbox_x1_, b.bbox_x1_), x2 = min(a.bbox_x2_, b.bbox_x2_),
             y1= max(a.bbox_y1_, b.bbox_y1_), y2 = min(a.bbox_y2_, b.bbox_y2_);
     float mw = min(a.bbox_.width, b.bbox_.width), mh = min(a.bbox_.height, b.bbox_.height);
-    if(x1>x2+mw/2.0 && y1>y2+mh/2.0) return true;
+    if(x1<x2-mw/3.0 && y1<y2-mh/3.0) return true;
+    return false;
+//    //assume a.pixels[] and b.pixels[] are sorted before
+//    int l = 0, r= 0;
+//    int cnt = 0;
+//    int m = 0.5*min(a.area_, b.area_);
+//    while(l<a.pixels_.size() && r<b.pixels_.size()){
+//        if(a.pixels_[l]==b.pixels_[r]){
+//            cnt++, l++, r++;
+//            if(cnt>m) return true;
+//        }
+//        else if(a.pixels_[l]>b.pixels_[r]) r++;
+//        else l++;
+//    }
+
 }
 
 bool contains(Region &a, Region &b){
@@ -513,6 +536,12 @@ bool contains(Region &a, Region &b){
     return s.x<=t.x+t.width/2.0 && s.y<=t.y+t.height/2.0 && s.x+s.width>=t.x+t.width/2.0 &&
             s.y+s.height>=t.y+t.height/2.0;
 }
+
+inline bool within(Point &p, Rect &r){
+    return p.x >=r.x && p.y >= r.y
+           && p.x<=r.x+r.width && p.y <=r.y+r.height;
+}
+
 void unique(vector<Region>& regions, int mid){
     int n=regions.size();
     vector<Region> tmp;

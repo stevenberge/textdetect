@@ -10,9 +10,7 @@
 #include "max_meaningful_clustering.h"
 #include "region_classifier.h"
 #include "group_classifier.h"
-
-#include "groups.h"
-
+#include <list>
 #define NUM_FEATURES 11 
 #define DECISION_THRESHOLD_EA 0.5
 #define DECISION_THRESHOLD_SF 0.999999999
@@ -22,6 +20,7 @@ using namespace std;
 using namespace cv;
 
 #include "utils.h"
+#include "groups.h"
 #include "extend.h"
 inline bool inSameLine(Region &a, Region &b){
     cv::Rect s = a.bbox_, t = b.bbox_;
@@ -90,25 +89,13 @@ void cutToLines(const vector<vector<bool> > &sameline, const vector<int> &block,
         }
     }
 }
-struct cmp{
-    bool operator ()(const Rect &a, const Rect &b){
-        return a.x < b.x;
-    }
-}cmper;
+
 Rect getLineRect(const vector<Region> &regions, const vector<int> &line){
     int n = line.size();
     if(n==0) return Rect(-1, -1, -1, -1);
-    vector<Rect> rects;
-    for(int i=0; i<n; i++){
-        const Rect &r = regions[line[i]].bbox_;
-        rects.push_back(r);
-    }
-    sort(rects.begin(), rects.end(), cmper);
     int x1=-1, x2=-1, y1=-1, y2=-1;
-    //int x = 0, y = 0;
-    for(int i=0; i<rects.size(); i++){
-        Rect &r=rects[i];
-        assert(r.x>=x2);
+    for(int i=0; i<n; i++){
+        Rect r=regions[line[i]].bbox_;
         x1 = min(x1, r.x);
         y1 = min(y1, r.y);
         x2 = max(x2, r.x + r.width);
@@ -239,17 +226,18 @@ int main( int argc, char** argv )
     segmentation = Mat::zeros(img.size(),CV_8UC3);
     all_segmentations = Mat::zeros(240,320*11,CV_8UC3);
 
-    int thrs[5] = {75, 34, 30, 25, 16};
+   // int thrs[6] = {75, 34, 30, 25, 16, 10};
+     int thrs[5] = {50, 34, 30, 18, 13};
     vector<Region> ff_regions;
     vector<Region> ff_dots;
-    vector<Region> dots[2];
+    list<Region> dots[2];
     vector<vector<int> > pixels(2, vector<int>(img.cols*img.rows, -1));
     vector<Region> valid_regions[2];
     vector<bool> valid_num[2];
     vector<int> valid_lcs[2];
     ///////////////////////////
     {
-        ::MSER mser8(true, 15,0.00001,0.008,1,0.7);
+        ::MSER mser8(true, 10,0.000001,0.008,0.5,0.33);
 
         ////// dots
         for (int step =1; step<3; step++)
@@ -261,6 +249,12 @@ int main( int argc, char** argv )
             for (int i=0; i<regions.size(); i++){
                 regions[i].er_fill(grey);
                 regions[i].extract_features(lab_img, grey, gradient_magnitude);
+            }
+            {
+                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+                fillRegions(tmp, regions);
+                char buf[100]; sprintf(buf, "out1/%s.%d.0dots.png", argv[1], step);
+                imwrite(buf, tmp);
             }
             for(int i= 0; i<regions.size(); i++){
                 if(isDotStroke(regions[i])) {
@@ -275,7 +269,7 @@ int main( int argc, char** argv )
             }
         }
     }
-    //grey = 255-grey;
+    grey = 255-grey;
 
     /////////////////////////////////////////
 
@@ -285,8 +279,8 @@ int main( int argc, char** argv )
         if (step == 2)
             grey = 255-grey;
 
-        for(int iii = 0; iii<5; iii++){
-            ::MSER mser8(false, thrs[iii],0.00008,0.05,0.5,0.33);
+        for(int iii = 0; iii<4; iii++){
+            ::MSER mser8(true, thrs[iii],0.00008,0.08,0.5,0.33);
 
             vector<Region> regions;
             vector<Region> final_regions;
@@ -294,7 +288,7 @@ int main( int argc, char** argv )
             //    vector<vector<int> > final_lines;
             vector<Region> line_regions;
 
-            cout<<"step:"<<step<<endl;
+            cout<<"step:"<<step<<"."<<iii<<endl;
             cout<<"mser"<<endl;
 
             mser8((uchar*)grey.data, grey.cols, grey.rows, regions);
@@ -307,47 +301,49 @@ int main( int argc, char** argv )
             }
 
             cout<<"after inited msers"<<endl;
-            IFOPT{
+            {
                 Mat tmp = Mat::zeros(img.size(), CV_8UC3);
                 drawMSERs(tmp, &regions, true, &img, true);
-                char buf[100]; sprintf(buf, "out1/%s.%d.%d.mser0.jpg", argv[1], iii, step);
+                char buf[100]; sprintf(buf, "out1/%s.%d.%d.mser0.jpg", argv[1], step, iii);
                 imwrite(buf, tmp);
             }
 
-//            {
-//                // regions are sorted in ids<int, int>
-//                vector<vector<int> > ps(img.cols*img.rows);
-//                vector<pair<int, int> > ids;
-//                for(int i = 0; i < regions.size(); i++){
-//                    ids.push_back(pair<int, int>(regions[i].area_, i));
-//                }
-//                sort(ids.begin(), ids.end());
-//                cout<<"after  sort"<<endl;
-//                // merged regions are kicked off
-//                vector<bool> tmp(regions.size(), false);
-//                for(int i = 0; i<ids.size(); i++){
+            {
+                // regions are sorted in ids<int, int>
+                vector<bool > ps(img.cols*img.rows, false);
+                vector<pair<int, int> > ids;
+                for(int i = 0; i < regions.size(); i++){
+                    ids.push_back(pair<int, int>(regions[i].area_, i));
+                }
+                sort(ids.begin(), ids.end());
+                cout<<"after  sort"<<endl;
+                // merged regions are kicked off
+                vector<bool> tmp(regions.size(), false);
+                for(int i = 0; i<ids.size(); i++){
+                    if(overlaps(regions[ids[i].second], ps, 0.6)) continue;
+                    tmp[ids[i].second] =true;
 //                    int mi, mn;
 //                    if(cntOverlap( regions[ids[i].second], ps, tmp, mi, mn)>1) continue;
 //                    if(mi>=0){
 //                        tmp[mi] = false;
 //                    }
 //                    tmp[ids[i].second]= true;
-//                    for(int j = 0; j<regions[ids[i].second].pixels_.size(); j++)
-//                        ps[regions[ids[i].second].pixels_[j]].push_back(ids[i].second);
-//                }
-//                vector<Region> sr;
-//                for(int i = 0; i<ids.size(); i++)
-//                    if(tmp[ids[i].second]) sr.push_back(regions[ids[i].second]);
-//                    else cout<<"regions "<<ids[i].second<<" is kicked off"<<endl;
-//                regions = sr;
-//            }
+                    for(int j = 0; j<regions[ids[i].second].pixels_.size(); j++)
+                        ps[regions[ids[i].second].pixels_[j]] = true;//.push_back(ids[i].second);
+                }
+                vector<Region> sr;
+                for(int i = 0; i<ids.size(); i++)
+                    if(tmp[ids[i].second]) sr.push_back(regions[ids[i].second]);
+                    else cout<<"regions "<<ids[i].second<<" is kicked off"<<endl;
+                regions = sr;
+            }
 
-//            {
-//                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
-//                fillRegions(tmp, regions);
-//                char buf[100]; sprintf(buf, "out1/%s.%d.%d.mser--.jpg", argv[1], step, iii);
-//                imwrite(buf, tmp);
-//            }
+            IFOPT{
+                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+                fillRegions(tmp, regions);
+                char buf[100]; sprintf(buf, "out1/%s.%d.%d.mser--.jpg", argv[1], step, iii);
+                imwrite(buf, tmp);
+            }
 
 
             //t = cvGetTickCount() - t;
@@ -424,6 +420,8 @@ int main( int argc, char** argv )
             }
             ////////////////////////////////////////////////////////////
             vector<vector<int> > lines;
+            vector<Rect> rects;
+            vector<bool> lineTags;
             vector<int> lineNum(N, -1);
             {
                 int dim=2;
@@ -441,6 +439,9 @@ int main( int argc, char** argv )
                     imwrite(buf, tmp);
                 }
 
+                rects.resize(lines.size());
+                lineTags= vector<bool>(lines.size(), false);
+
                 vector<vector<int> > srt;
                 vector<vector<int> > rrt;
                 for(int i=0; i<lines.size(); i++){
@@ -448,6 +449,7 @@ int main( int argc, char** argv )
                     for(int j = 0; j < line.size(); j++){
                         lineNum[line[j]] = i;
                     }
+                    rects[i] = getLineRect(regions, lines[i]);
                     //cout<<"group "<<j<<":"<<endl;
                     int n = line.size();
                     cout<<"line"<<i<<" : n="<< line.size()<<endl ;
@@ -456,7 +458,7 @@ int main( int argc, char** argv )
                         IFOPT{
                             Mat tmp = Mat::zeros(img.size(), CV_8UC1);
                             fillRegions(tmp, regions, line);
-                            char buf[100]; sprintf(buf, "out1/%s.%d.%d.%d.group.png",  argv[1], iii, step, i);
+                            char buf[100]; sprintf(buf, "out1/%s.%d.%d.%d.group.png",  argv[1], step, iii, i);
                             imwrite(buf, tmp);
                         }
 
@@ -464,9 +466,14 @@ int main( int argc, char** argv )
                         float g = groupVar(regions, line);
                         float h= group_boost(&line, &regions);
                         bool k= groupSco(region_boost, regions, line);
-
-                        if(!groupLs(regions, line, i)) continue;
-
+                        LineFeature lf;
+                        if(!groupLs(regions, line, i, lf)) continue;
+                        pair<float, float> p = groupAlias(regions, line);
+                        if((p.first>0.18 && p.second>0.3 || p.first>0.25 || p.second>0.5) && n<5 && lf.sw_var>0.01 ||
+                                (n==2 && lf.sw_var>0.01 && p.first>0.15)) {
+                            cout<<"line"<<i<<" : n="<< line.size() <<", oy="<<p.first<<", ox="<<p.second<<endl;
+                            continue;
+                        }
                         g/=n;
                         if(n<2 && g>0.005) continue;
                         if(f>=200 && g<=0.01 && h>=0.1 || f>120 && g<=0.01
@@ -474,13 +481,38 @@ int main( int argc, char** argv )
                             cout<<"#line"<<i<<" : n="<< line.size() <<", f="<<f<<", g="<<g<<", h="<<h<<", k="<<k<<endl;
                             srt.push_back(line);
                             final_clusters.push_back(line);
-                            //final_lines.push_back(line);
+                            lineTags[i] = true;
                         }
                         else{
                             cout<<"line"<<i<<" : n="<< line.size() <<", f="<<f<<", g="<<g<<", h="<<h<<", k="<<k<<endl;
                             rrt.push_back(line);
                         }
-
+                    }
+                    if(lineTags[i]){
+                        float sw = groupSW(regions, line);
+                        Rect &r = rects[i];
+                        Rect  q(r.x, r.y+r.height/2, r.x+r.width, r.y+r.height);
+                        for(list<Region>::iterator it = dots[step-1].begin(); it!=dots[step-1].end(); ){
+                            Region & dot = *it;
+                            int x = (dot.bbox_x1_+ dot.bbox_x2_)/2, y = (dot.bbox_y1_+dot.bbox_y2_)/2;
+                            Point p(x, y);
+                            if(dot.stroke_mean_<1.5*sw && dot.stroke_mean_>0.3*sw && within(p, q)){
+                                int left =0, right =0;
+                                int j; for( j = 0; j<line.size(); j++){
+                                    Region & t = regions[line[j]];
+                                    int d = min(abs(t.bbox_x1_-x), abs(x-t.bbox_x2_)), e = t.bbox_y2_ -y;
+                                    bool l = abs(t.bbox_x1_-x) < abs(x-t.bbox_x2_);
+                                    if(d<t.bbox_.width && e<t.bbox_.height/3 && e>0) {
+                                        if(l) left ++;
+                                        else right ++;
+                                    }
+                                }
+                                if(left  && right)
+                                    ff_dots.push_back(dot), it = dots[step-1].erase(it);
+                                else it++;
+                            }
+                            else it++;
+                        }
                     }
                 }
                 IFOPT{
@@ -550,14 +582,6 @@ int main( int argc, char** argv )
                 }
             }
 
-            {
-                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
-                fillRegions(tmp, final_regions);
-                char buf[100];
-                sprintf(buf, "out1/%s.%d.%d.out.png", argv[1], step, iii);
-                imwrite(buf, tmp);
-            }
-
             int offset= valid_regions[step-1].size();
             //valid_regions[step-1].append(final_regions);
             APPENDVEC(valid_regions[step-1], final_regions);
@@ -582,6 +606,18 @@ int main( int argc, char** argv )
                 for(int j = 0; j<final_regions[i].pixels_.size(); j++)
                     pixels[step-1][final_regions[i].pixels_[j]]=i + offset;
             }
+
+
+            {
+//                vector<int> tv;
+//                for(int i = 0; i<valid_regions[step-1].size(); i++)
+//                    if(valid_num[step-1][i]) tv.push_back(i);
+                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+                fillRegions(tmp, final_regions);//valid_regions[step-1], tv);
+                char buf[100];
+                sprintf(buf, "out1/%s.%d.%d.out.png", argv[1], step, iii);
+                imwrite(buf, tmp);
+            }
         }
 
         //////////////////////////////////////////
@@ -605,17 +641,19 @@ int main( int argc, char** argv )
             for(int i = 0; i<valid_regions[step-1].size(); i++){
                 if(!valid_num[step-1][i]) continue;
                 if(isHorizonStroke(valid_regions[step-1][i], region_boost)){
-                    for(int j = 0; j<dots[step-1].size(); j++){
-                        if(isI(dots[step-1][j], valid_regions[step-1][i])){
-                            ff_dots.push_back(dots[step-1][j]);
-                            is.push_back(dots[step-1][j]),
+                    for(list<Region>::iterator it = dots[step-1].begin(); it!=dots[step-1].end(); ){
+                        if(isI(*it, valid_regions[step-1][i])){
+                            ff_dots.push_back(*it);
+                            is.push_back(*it),
                             is.push_back(valid_regions[step-1][i]);
+                            it = dots[step-1].erase(it);
                         }
+                        else it++;
                     }
                 }
             }
         }
-        IFOPT{
+        {
             Mat tmp = Mat::zeros(img.size(), CV_8UC1);
             fillRegions(tmp, is);
             sprintf(buf, "out1/%s.is.png", argv[1]);
@@ -638,7 +676,8 @@ int main( int argc, char** argv )
         int j = 0; for( j = 0; j<valid_num[1].size(); j++){
             if(!valid_num[1][j]) continue;
             Region & t=valid_regions[1][j];
-            if(overlay(s, t) && valid_lcs[0][i] <valid_lcs[1][j]) break;
+            //if(overlay(s, t) && boxArea(s)<boxArea(t)) break;//valid_lcs[0][i] <valid_lcs[1][j]) break;
+            if(contains(t, s) && boxArea(s)<boxArea(t)) break;
         }
         if(j==valid_num[1].size()){
             ff_regions.push_back(valid_regions[0][i]);
@@ -650,14 +689,22 @@ int main( int argc, char** argv )
         int j = 0; for( j = 0; j<valid_num[0].size(); j++){
             if(!valid_num[0][j]) continue;
             Region & t=valid_regions[0][j];
-            if(overlay(s, t) && valid_lcs[1][i] <valid_lcs[0][j]) break;
+            //if(overlay(s, t) && valid_lcs[1][i] <valid_lcs[0][j]) break;
+            //if(overlay(s, t) && boxArea(s)<boxArea(t)) break;
+            if(contains(t, s) && boxArea(s)<boxArea(t)) break;
         }
         if(j==valid_num[0].size()){
             ff_regions.push_back(valid_regions[1][i]);
         }
     }
 
-    APPENDVEC(ff_regions, ff_dots);
+    for(int i = 0; i<ff_dots.size(); i++){
+        int j = 0; for(; j<ff_regions.size(); j++){
+            if(overlay(ff_regions[j], ff_dots[i])) break;
+        }
+        if(j==ff_regions.size()) ff_regions.push_back(ff_dots[i]);
+    }
+    //APPENDVEC(ff_regions, ff_dots);
     {
         Mat tmp = Mat::zeros(img.size(), CV_8UC1);
         fillRegions(tmp, ff_regions);
