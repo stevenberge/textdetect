@@ -30,9 +30,13 @@ int main( int argc, char** argv )
 	img = imread(argv[1]);
 	int threshold=100; 
 	sscanf(argv[2],"%d",&threshold);
+  float maxarea=0.005;
+  if(argc>3) 
+    sscanf(argv[3],"%f",&maxarea);
+  cout << "maxarea:"<<maxarea<<endl;
 	// ::MSER mser8(false,threshold,0.00001,0.95,1,0.7);
 	// ::MSER mser8(true,threshold,0.00001,0.95,1,0.7);
-  ::MSER mser8(false, threshold,0.00008,0.005,1,0.7);
+  ::MSER mser8(false, threshold,0.00008,maxarea,1,0.7);
 	cvtColor(img, grey, CV_BGR2GRAY);
 
 	for (int step =1; step<=2; step++)

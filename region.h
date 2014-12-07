@@ -75,11 +75,13 @@ public:
   void merge(Region * child);
   void grow(cv::Mat &img, int threshold=80);
 
-private:
   bool stable_; // Flag indicating if the region is stable
   Region * parent_; // Pointer to the parent region
   Region * child_; // Pointer to the first child
   Region * next_; // Pointer to the next (sister) region
+
+private:
+
 
   void accumulate(int x, int y);
   void detect(int delta, int minArea, int maxArea, double maxVariation, double minDiversity,

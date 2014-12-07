@@ -369,8 +369,7 @@ done_all_neighbors : ;
         }
     }
     //@xzg
-    sort(pixels_.begin(),pixels_.end());
-
+    //sort(pixels_.begin(),pixels_.end());
 
     free( members_pt ) ;
     free( visited_pt ) ;

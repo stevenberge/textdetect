@@ -14,10 +14,10 @@
 #include "groups.h"
 
 #define NUM_FEATURES 11 
-
 #define DECISION_THRESHOLD_EA 0.5
 #define DECISION_THRESHOLD_SF 0.999999999
 
+#define APPENDVEC(a, b) a.insert(a.end(), b.begin(), b.end())
 using namespace std;
 using namespace cv;
 
@@ -150,24 +150,81 @@ void getLineRects(const vector<Region> &regions, const vector<int> &line, vector
     if(x1>=0) res.push_back(Rect(x1, y1, x2-x1, y2-y1));
     return ;
 }
-bool overlaps(Region &r, set<int> &ps){
-    int n = r.pixels_.size(), cnt = 0;
+int cntOverlap(Region &r,  vector<vector<int> > &ps, vector<bool> &tmp, int &mi, int &mn){
+    map<int, int> ss;
+    float n = r.pixels_.size(), cnt = 0;
+    for(int i = 0; i< n; i++){
+        for(int j = 0; j<ps[i].size(); j++){
+            if(tmp[ps[i][j]])
+                ss[ps[i][j]] ++;
+        }
+    }
+    mn = 0, mi = -1;
+    for(map<int, int>::iterator it = ss.begin(); it!=ss.end(); it++){
+        if(it->second>1) cnt++;
+        if(it->second>mn) mi = it->first, mn = it->second;
+    }
+    return cnt;
+}
+
+bool overlaps(Region &r, vector<int> &ps, vector<bool> &ns, int &t, int &cnt){
+    float n = r.pixels_.size();
+     t = -1, cnt = 0;
+    for(int i = 0; i< n; i++){
+        int c = r.pixels_[i];
+        if(ps[c]>=0 && ns[ps[c]]) {
+            if(t<0) t=ps[c], cnt=1;
+            else if(t==ps[c]) cnt++;
+            else return false;
+        }
+    }
+    return true;
+}
+bool overlaps(Region &r, set<int>  &ps, float thr=0.6){
+    float n = r.pixels_.size(), cnt = 0;
     for(int i = 0; i< n; i++){
         if(ps.count(r.pixels_[i])) cnt++;
     }
-    return cnt >= 0.7*n;
+    return cnt >= thr*n;
+}
+bool overlaps(Region &r, vector<bool> &ps, float thr=0.6){
+    float n = r.pixels_.size(), cnt = 0;
+    for(int i = 0; i< n; i++){
+        if(ps[r.pixels_[i]]) cnt++;
+    }
+    return cnt >= thr*n;
 }
 
+void postUnique(vector<Region> &regions){
+    int n = regions.size();
+    vector<set<int> > sets(n);
+    for(int i = 0; i<n; i++){
+        for(int j = 0; j<regions[i].pixels_.size(); j++){
+            sets[i].insert(regions[i].pixels_[j]);
+        }
+    }
+    vector<Region> res;
+    for(int i = 0; i<n; i++){
+        int j; for(j = i+1; j<n; j++){
+            if(overlaps(regions[i], sets[j], 0.7)) break;// has son
+        }
+        if(j==n) res.push_back(regions[i]);
+    }
+    regions=res;
+}
+typedef vector<Region>::iterator IT;
+struct RegionCmp{
+    bool operator()(const IT &a, const IT &b){
+        return   a->area_<=b->area_;
+    }
+}regionCmp;
 int main( int argc, char** argv )
 {
     char buf[100];
     Mat img, grey, lab_img, gradient_magnitude, segmentation, all_segmentations;
-    vector<Region> regions; vector<Rect> rects;
     //::MSER mser8(true,20,0.00008,0.03,1,0.7);
-    int thr = 30;
     bool debug = (argc>2 && strcmp(argv[2], "true")==0);
-    if(argc>3) sscanf(argv[3], "%d", &thr);
-    cout<<"threshold:"<<thr<<endl;
+    #define IFOPT   if(debug)
     //::MSER mser8(true, thr,0.00008,0.005,1,0.7);
 
     RegionClassifier region_boost("boost_train/trained_boost_char.xml", 0);
@@ -182,575 +239,431 @@ int main( int argc, char** argv )
     segmentation = Mat::zeros(img.size(),CV_8UC3);
     all_segmentations = Mat::zeros(240,320*11,CV_8UC3);
 
-int thrs[3] = {57, 30, 15};
- vector<Region> ff_regions;
- set<int> pixels;
-for(int iii = 0; iii<3; iii++){
-    ::MSER mser8(true, thrs[iii],0.00008,0.08,1,0.7);
+    int thrs[5] = {75, 34, 30, 25, 16};
+    vector<Region> ff_regions;
+    vector<Region> ff_dots;
+    vector<Region> dots[2];
+    vector<vector<int> > pixels(2, vector<int>(img.cols*img.rows, -1));
+    vector<Region> valid_regions[2];
+    vector<bool> valid_num[2];
+    vector<int> valid_lcs[2];
+    ///////////////////////////
+    {
+        ::MSER mser8(true, 15,0.00001,0.008,1,0.7);
 
-    vector<Region> final_regions;
-    vector<vector<int> > final_lines;
-    vector<Region> line_regions;
+        ////// dots
+        for (int step =1; step<3; step++)
+        {
+            if (step == 2)
+                grey = 255-grey;
+            vector<Region> regions;
+            mser8((uchar*)grey.data, grey.cols, grey.rows, regions);
+            for (int i=0; i<regions.size(); i++){
+                regions[i].er_fill(grey);
+                regions[i].extract_features(lab_img, grey, gradient_magnitude);
+            }
+            for(int i= 0; i<regions.size(); i++){
+                if(isDotStroke(regions[i])) {
+                    dots[step-1].push_back(regions[i]);
+                }
+            }
+            {
+                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+                fillRegions(tmp, dots[step-1]);
+                char buf[100]; sprintf(buf, "out1/%s.%d.dots.png", argv[1], step);
+                imwrite(buf, tmp);
+            }
+        }
+    }
+    //grey = 255-grey;
+
+    /////////////////////////////////////////
+
     int mid = -1;
     for (int step =1; step<3; step++)
     {
-        cout<<"step:"<<step<<endl;
         if (step == 2)
             grey = 255-grey;
 
-        //double t_tot = (double)cvGetTickCount();
+        for(int iii = 0; iii<5; iii++){
+            ::MSER mser8(false, thrs[iii],0.00008,0.05,0.5,0.33);
 
-        //double t = (double)cvGetTickCount();
-        cout<<"mser"<<endl;
-        mser8((uchar*)grey.data, grey.cols, grey.rows, regions);
-        cout<<regions.size()<<" regions extracted"<<endl;
+            vector<Region> regions;
+            vector<Region> final_regions;
+            vector<int> line_sizes;
+            //    vector<vector<int> > final_lines;
+            vector<Region> line_regions;
 
-        //t = cvGetTickCount() - t;
-        //cout << "Detected " << regions.size() << " regions" << " in " << t/((double)cvGetTickFrequency()*1000.) << " ms." << endl;
-        //t = (double)cvGetTickCount();
+            cout<<"step:"<<step<<endl;
+            cout<<"mser"<<endl;
+
+            mser8((uchar*)grey.data, grey.cols, grey.rows, regions);
+            cout<<regions.size()<<" regions extracted"<<endl;
 
 
-        for (int i=0; i<regions.size(); i++)
-            regions[i].er_fill(grey),
-            regions[i].extract_features(lab_img, grey, gradient_magnitude);
-        {
-            Mat tmp = Mat::zeros(img.size(), CV_8UC3);
-            drawMSERs(tmp, &regions, true, &img, true);
-            char buf[100]; sprintf(buf, "out1/%s.%d.mser0.jpg", argv[1], step);
-            imwrite(buf, tmp);
-        }
-
-        //////////////////////improved mser
-        if(debug){
-            vector<Region> rs = regions;
-            for (int i=0; i<rs.size(); i++){
-                rs[i].grow(img, 30);
+            for (int i=0; i<regions.size(); i++){
+                regions[i].er_fill(grey);
+                regions[i].extract_features(lab_img, grey, gradient_magnitude);
             }
-            {
-                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
-                fillRegions(tmp, rs);
-                char buf[100]; sprintf(buf, "out1/%s.%d.mser--.jpg", argv[1], step);
-                imwrite(buf, tmp);
-            }
-        }
 
-        //t = cvGetTickCount() - t;
-        //cout << "Regions filled in " << t/((double)cvGetTickFrequency()*1000.) << " ms." << endl;
-        //t = (double)cvGetTickCount();
-
-        ////// dots
-        vector<Region> dots;
-        for(int i= 0; i<regions.size(); i++){
-            if(isDotStroke(regions[i])) dots.push_back(regions[i]);
-        }
-        {
-            Mat tmp = Mat::zeros(img.size(), CV_8UC1);
-            fillRegions(tmp, dots);
-            char buf[100]; sprintf(buf, "out1/%s.%d.dots.png", argv[1], step);
-            imwrite(buf, tmp);
-        }
-
-        double max_stroke = 0;
-        vector<Region> erased;
-        for (int i=regions.size()-1; i>=0; i--)
-        {
-            Region &r=regions.at(i);
-            //|| (r.bbox_.width <=1)
-            if ( (r.stroke_std_/r.stroke_mean_ > 0.8) || (r.num_holes_>3)  || (r.bbox_.height <=2) || r.area_ <=4
-                 || (r.bbox_.width > 8.5*r.bbox_.height)  ){//|| r.stroke_mean_>0.3*r.bbox_.height
-                if(r.stroke_mean_>0.3*r.bbox_.height)   {
-                //    erased.push_back(r);
-                    //cout<<"mean width:"<<r.stroke_mean_<<" std width:"<<r.stroke_std_<<" width var"<<r.stroke_var_<<" region height:"<<r.bbox_.height<<endl;
-                }
-                erased.push_back(r);
-                regions.erase(regions.begin()+i);
-            }
-            else
-                max_stroke = max(max_stroke, regions[i].stroke_mean_);
-        }
-        if(debug){
-            Mat tmp = Mat::zeros(img.size(), CV_8UC3);
-            drawMSERs(tmp, &erased, true, &img, true);
-            char buf[100]; sprintf(buf, "out1/%s.%d.erased.jpg", argv[1], step);
-            imwrite(buf, tmp);
-        }
-        {
-            Mat tmp = Mat::zeros(img.size(), CV_8UC3);
-            drawMSERs(tmp, &regions, true, &img, true);
-            char buf[100]; sprintf(buf, "out1/%s.%d.mser.jpg", argv[1], step);
-            imwrite(buf, tmp);
-        }
-        /////////
-        cout<<"calculate graph"<<endl;
-        int N = regions.size();
-
-        vector<vector<float> > graph(N, vector<float>(N, 0));
-        vector<vector<bool> > sameline(N, vector<bool>(N, false));
-        {
-            for (int i=0; i<N; i++){
-                graph[i][i]=100;
-                for(int j=i+1; j<N; j++){
-                    graph[i][j]=graph[j][i]=dist(regions[i], regions[j]);
-                    sameline[i][j]=sameline[j][i]=inSameLine(regions[i], regions[j]);
-                }
-            }
-        }
-
-        cout<<"graph calculated"<<endl;
-
-        MaxMeaningfulClustering 	mm_clustering(METHOD_METR_SINGLE, METRIC_SEUCLIDEAN);
-        vector<vector<int> > final_clusters;
-        vector<vector<int> > blocks;
-        vector<bool> blockTag;
-        {
-            //divide into connected tree
-            float thres=25;
-            vector<bool> vis(N, false);
-            for(int i=0; i<N; i++){
-                if(!vis[i]){
-                    vector<int> tmp;
-                    dfs(graph, thres, tmp, i, vis);
-                    blocks.push_back(tmp);
-                }
-            }
-            if(debug){
+            cout<<"after inited msers"<<endl;
+            IFOPT{
                 Mat tmp = Mat::zeros(img.size(), CV_8UC3);
-                drawClusters(tmp, &regions, &blocks);
-                char buf[100];
-                sprintf(buf, "out1/%s.%d.block.jpg", argv[1], step);
+                drawMSERs(tmp, &regions, true, &img, true);
+                char buf[100]; sprintf(buf, "out1/%s.%d.%d.mser0.jpg", argv[1], iii, step);
                 imwrite(buf, tmp);
             }
 
-            blockTag.resize(blocks.size(), false);
-   /*         for(int j=0; j<blocks.size(); j++){
-                if ( (group_boost(&blocks.at(j), &regions) >= DECISION_THRESHOLD_SF) )
-                {
-                    final_clusters.push_back(blocks[j]);
-                    final_lines.push_back(blocks[j]);
-                    blockTag[j]=true;
-                }
-            }
-
-            tmp = Mat::zeros(img.size(), CV_8UC3);
-            drawClusters(tmp, &regions, &final_clusters);
-            sprintf(buf, "out1/%s.%d.block1.jpg", argv[1], step);
-            imwrite(buf, tmp);
-     */   }
-
-        vector<vector<int> > lines;
-        vector<int> lineNum(N, -1);
-        vector<bool> lineTag(N, false);
-        {
-            int dim=2;
-            t_float *data = (t_float*)malloc(dim*N * sizeof(t_float));
-
-            for(int i=0; i< blocks.size(); i++){
-                //if(blockTag[i]) continue;
-                cutToLines(sameline, blocks[i], lines);
-            }
-
-            /*/ regions => better regions
-            {
-                for(int i=0; i<lines.size(); i++){
-                    if(lines[i].size()<1) continue;
-
-                    Mat tmp=img(lineRect[i]);
-                    char buf[100];
-                    sprintf(buf, "out1/%s.%d.png", argv[1], i);
-                    imwrite(buf, tmp);
-
-                    float stroke_mean=0;
-                    for(int j=0; j<lines[i].size(); j++){
-                        int k=lines[i][j];
-                        stroke_mean+=regions[k].stroke_mean_;
-                    }
-                    stroke_mean/=lines[i].size();
-                    int width=(1+stroke_mean);
-
-                    ::MSER mser(true,width,0.00008,0.05,1,0.7);
-                    vector<Region> tt;
-                    mser(tmp.data, lineRect[i].width, lineRect[i].height, tt);
-                    Mat ttmp = Mat::zeros(tmp.size(), CV_8UC1);
-                    fillRegions(ttmp, tt);
-
-                    sprintf(buf, "out1/%s.mser.%d.png", argv[1], i);
-                    imwrite(buf, ttmp);
-                }
-            }*/
-
-            Mat tmp = Mat::zeros(img.size(), CV_8UC3);
-            drawClusters(tmp, &regions, &lines);
-            char buf[100]; sprintf(buf, "out1/%s.%d.lines0.jpg", argv[1], step);
-            imwrite(buf, tmp);
-
-            vector<vector<int> > srt;
-            vector<vector<int> > rrt;
-            for(int i=0; i<lines.size(); i++){
-                vector<int> &line = lines.at(i);
-                for(int j = 0; j < line.size(); j++){
-                    lineNum[line[j]] = i;
-                }
-                //cout<<"group "<<j<<":"<<endl;
-                int n = line.size();
-                cout<<"line"<<i<<" : n="<< line.size()<<endl ;
-                if(n>1)
-                {
-                    {
-                       // cout<<"group"<<j<<":"<<f<<endl;
-                       // cout<<"var:"<<g<<endl;
-                       // cout<<"boost:"<<h<<endl;
-                       // if(t) cout<<"as line is chosen..."<<endl;
-                        Mat tmp = Mat::zeros(img.size(), CV_8UC1);
-                        fillRegions(tmp, regions, line);
-                        char buf[100]; sprintf(buf, "out1/%s.%d.%d.group.jpg",  argv[1], step, i);
-                        imwrite(buf, tmp);
-                    }
-
-                    float f = groupSim(graph,  line);
-                    float g = groupVar(regions, line);
-                    float h= group_boost(&line, &regions);
-                    bool k= groupSco(region_boost, regions, line);
-
-                    if(!groupLs(regions, line, i)) continue;
-//                    if(f>=200 && g<=0.1 && h>=0.1 || f>120 && g<=0.03
-//                            || f>150 && g<=0.07 || f>400 && g<0.2 || h>DECISION_THRESHOLD_SF*2/3 || g<0.15 && k){
-//                        cout<<"#line"<<i<<" : n="<< line.size() <<", f="<<f<<", g="<<g<<", h="<<h<<", k="<<k<<endl;
-//                        srt.push_back(line);
-//                        final_clusters.push_back(line);
-//                        final_lines.push_back(line);
+//            {
+//                // regions are sorted in ids<int, int>
+//                vector<vector<int> > ps(img.cols*img.rows);
+//                vector<pair<int, int> > ids;
+//                for(int i = 0; i < regions.size(); i++){
+//                    ids.push_back(pair<int, int>(regions[i].area_, i));
+//                }
+//                sort(ids.begin(), ids.end());
+//                cout<<"after  sort"<<endl;
+//                // merged regions are kicked off
+//                vector<bool> tmp(regions.size(), false);
+//                for(int i = 0; i<ids.size(); i++){
+//                    int mi, mn;
+//                    if(cntOverlap( regions[ids[i].second], ps, tmp, mi, mn)>1) continue;
+//                    if(mi>=0){
+//                        tmp[mi] = false;
 //                    }
-                    g/=n;
-                    if(n<2 && g>0.005) continue;
-                    if(f>=200 && g<=0.01 && h>=0.1 || f>120 && g<=0.01
-                            || f>150 && g<=0.02 || f>400 && g<0.01 || h>DECISION_THRESHOLD_SF*2/3 || g<0.02 && k){
-                        cout<<"#line"<<i<<" : n="<< line.size() <<", f="<<f<<", g="<<g<<", h="<<h<<", k="<<k<<endl;
-                        srt.push_back(line);
-                        final_clusters.push_back(line);
-                        final_lines.push_back(line);
-                    }
-                    else{
-                        cout<<"line"<<i<<" : n="<< line.size() <<", f="<<f<<", g="<<g<<", h="<<h<<", k="<<k<<endl;
-                        rrt.push_back(line);
-                    }
+//                    tmp[ids[i].second]= true;
+//                    for(int j = 0; j<regions[ids[i].second].pixels_.size(); j++)
+//                        ps[regions[ids[i].second].pixels_[j]].push_back(ids[i].second);
+//                }
+//                vector<Region> sr;
+//                for(int i = 0; i<ids.size(); i++)
+//                    if(tmp[ids[i].second]) sr.push_back(regions[ids[i].second]);
+//                    else cout<<"regions "<<ids[i].second<<" is kicked off"<<endl;
+//                regions = sr;
+//            }
 
-                }
-            }
-            tmp = Mat::zeros(img.size(), CV_8UC3);
-            drawClusters(tmp, &regions, &rrt);
-            sprintf(buf, "out1/%s.%d.lines-1.jpg", argv[1], step);
-            imwrite(buf, tmp);
-        }
-
-
-        //t = cvGetTickCount() - t;
-        //cout << "Features extracted in " << t/((double)cvGetTickFrequency()*1000.) << " ms." << endl;
-        //t = (double)cvGetTickCount();
-/*
-        vector< vector<int> > meaningful_clusters;
-        //vector< vector<int> > final_clusters;
-        Mat co_occurrence_matrix = Mat::zeros((int)regions.size(), (int)regions.size(), CV_64F);
-
-        int dims[NUM_FEATURES] = {3,3,3,3,3,3,3,3,3,5,5};
-
-        for (int f=0; f<NUM_FEATURES; f++)
-        {
-            unsigned int N = regions.size();
-            if (N<3) break;
-            int dim = dims[f];
-            t_float *data = (t_float*)malloc(dim*N * sizeof(t_float));
-            int count = 0;
-
-            for (int i=0; i<regions.size(); i++)
-            {
-                data[count] = (t_float)(regions.at(i).bbox_.x+regions.at(i).bbox_.width/2)/img.cols;
-                data[count+1] = (t_float)(regions.at(i).bbox_.y+regions.at(i).bbox_.height/2)/img.rows;
-                switch (f)
-                {
-                case 0:
-                    data[count+2] = (t_float)regions.at(i).intensity_mean_/255;
-                    break;
-                case 1:
-                    data[count+2] = (t_float)regions.at(i).boundary_intensity_mean_/255;
-                    break;
-                case 2:
-                    data[count+2] = (t_float)regions.at(i).bbox_.y/img.rows;
-                    break;
-                case 3:
-                    data[count+2] = (t_float)(regions.at(i).bbox_.y+regions.at(i).bbox_.height)/img.rows;
-                    break;
-                case 4:
-                    data[count+2] = (t_float)max(regions.at(i).bbox_.height, regions.at(i).bbox_.width)/max(img.rows,img.cols);
-                    break;
-                case 5:
-                    data[count+2] = (t_float)regions.at(i).stroke_mean_/max_stroke;
-                    break;
-                case 6:
-                    data[count+2] = (t_float)regions.at(i).area_/(img.rows*img.cols);
-                    break;
-                case 7:
-                    data[count+2] = (t_float)(regions.at(i).bbox_.height*regions.at(i).bbox_.width)/(img.rows*img.cols);
-                    break;
-                case 8:
-                    data[count+2] = (t_float)regions.at(i).gradient_mean_/255;
-                    break;
-                case 9:
-                    data[count+2] = (t_float)regions.at(i).color_mean_.at(0)/255;
-                    data[count+3] = (t_float)regions.at(i).color_mean_.at(1)/255;
-                    data[count+4] = (t_float)regions.at(i).color_mean_.at(2)/255;
-                    break;
-                case 10:
-                    data[count+2] = (t_float)regions.at(i).boundary_color_mean_.at(0)/255;
-                    data[count+3] = (t_float)regions.at(i).boundary_color_mean_.at(1)/255;
-                    data[count+4] = (t_float)regions.at(i).boundary_color_mean_.at(2)/255;
-                    break;
-                }
-                count = count+dim;
-            }
-
-            mm_clustering(data, N, dim, METHOD_METR_SINGLE, METRIC_SEUCLIDEAN, &meaningful_clusters); // TODO try accumulating more evidence by using different methods and metrics
-
-            for (int k=0; k<meaningful_clusters.size(); k++)
-            {
-                //if ( group_boost(&meaningful_clusters.at(k), &regions)) // TODO try is it's betetr to accumulate only the most probable text groups
-                accumulate_evidence(&meaningful_clusters.at(k), 1, &co_occurrence_matrix);
-
-                if ( (group_boost(&meaningful_clusters.at(k), &regions) >= DECISION_THRESHOLD_SF) )
-                {
-                  //  final_clusters.push_back(meaningful_clusters.at(k));
-                    if(debug){
-                        int j=random()%1000;
-                        cout<<"group"<<j<<":"<<endl;
-                        cout<<"as meaningful is chosen..."<<endl;
-                        Mat tmp = Mat::zeros(img.size(), CV_8UC1);
-                        fillRegions(tmp, regions, meaningful_clusters.at(k));
-                        char buf[100]; sprintf(buf, "out1/%d.group.jpg",  j);
-                        imwrite(buf, tmp);
-                    }
-                }
-            }
-
-            Mat tmp_segmentation = Mat::zeros(img.size(),CV_8UC3);
-            Mat tmp_all_segmentations = Mat::zeros(240,320*11,CV_8UC3);
-            drawClusters(tmp_segmentation, &regions, &meaningful_clusters);
-            Mat tmp = Mat::zeros(240,320,CV_8UC3);
-            resize(tmp_segmentation,tmp,tmp.size());
-            Mat _t=tmp_all_segmentations(Rect(320*f,0,320,240));
-            tmp.copyTo(_t);
-            all_segmentations = all_segmentations + tmp_all_segmentations;
-
-            free(data);
-            meaningful_clusters.clear();
-        }
-
-        //t = cvGetTickCount() - t;
-        //cout << "Clusterings (" << NUM_FEATURES << ") done in " << t/((double)cvGetTickFrequency()*1000.) << " ms." << endl;
-        //t = (double)cvGetTickCount();
-
-
-        double minVal;
-        double maxVal;
-        minMaxLoc(co_occurrence_matrix, &minVal, &maxVal);
-
-        maxVal = NUM_FEATURES - 1; //TODO this is true only if you are using "grow == 1" in accumulate_evidence function
-        minVal=0;
-
-        co_occurrence_matrix = maxVal - co_occurrence_matrix;
-        co_occurrence_matrix = co_occurrence_matrix / maxVal;
-
-        //we want a sparse matrix
-
-        t_float *D = (t_float*)malloc((regions.size()*regions.size()) * sizeof(t_float));
-        int pos = 0;
-        for (int i = 0; i<co_occurrence_matrix.rows; i++)
-        {
-            for (int j = i+1; j<co_occurrence_matrix.cols; j++)
-            {
-                D[pos] = (t_float)co_occurrence_matrix.at<double>(i, j);
-                pos++;
-            }
-        }
-
-        // fast clustering from the co-occurrence matrix
-        mm_clustering(D, regions.size(), METHOD_METR_AVERAGE, &meaningful_clusters); //  TODO try with METHOD_METR_COMPLETE
-        free(D);
-
-        //t = cvGetTickCount() - t;
-        //cout << "Evidence Accumulation Clustering done in " << t/((double)cvGetTickFrequency()*1000.) << " ms. Got " << meaningful_clusters.size() << " clusters." << endl;
-        //t = (double)cvGetTickCount();
-
-
-        for (int i=meaningful_clusters.size()-1; i>=0; i--)
-        {
-            //if ( (! group_boost(&meaningful_clusters.at(i), &regions)) || (meaningful_clusters.at(i).size()<3) )
-            if ( (group_boost(&meaningful_clusters.at(i), &regions) >= DECISION_THRESHOLD_EA) )
-            {
-               // final_clusters.push_back(meaningful_clusters.at(i));
-                if(debug){
-                    int j=random()%1000;
-                    cout<<"block"<<j<<":"<<endl;
-                    cout<<"as occurance matrix is chosen..."<<endl;
-                    Mat tmp = Mat::zeros(img.size(), CV_8UC1);
-                    fillRegions(tmp, regions, meaningful_clusters.at(i));
-                    char buf[100]; sprintf(buf, "out1/%d.group.jpg",  j);
-                    imwrite(buf, tmp);
-                }
-            }
-        }
- */
-        //////////
-        {
-            set<int> rs;
-            for(int i=0; i<final_clusters.size(); i++){
-                for(int j=0; j<final_clusters[i].size(); j++){
-                    rs.insert(final_clusters[i][j]);
-                }
-            }
-            // cout<<"after insert"<<endl;
-            vector<Region> bs;
-            vector<int> crt;
-            for(int j = 0; j < N; j++){
-                if(!rs.count(j)){
-                    float score=0;
-                    for(set<int>::iterator it=rs.begin(); it!=rs.end(); it++){
-                        {
-                            if(graph[*it][j] > 40)
-                                score += graph[*it][j];
-                        }
-                    }
-                    if(score>600) bs.push_back(regions[j]), crt.push_back(j), rs.insert(j);
-                }
-            }
-            ////
-            final_clusters.push_back(crt);
-            if(debug){
-                int j=random()%1000;
-                cout<<"group"<<j<<":"<<endl;
-                cout<<"as crt is chosen..."<<endl;
-                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
-                fillRegions(tmp, regions, crt);
-                char buf[100]; sprintf(buf, "out1/%d.group.jpg",  j);
-                imwrite(buf, tmp);
-            }
-
-            /////////
-            //final_clusters.clear();
-            for(set<int>::iterator it = rs.begin(); it != rs.end(); it++){
-                int t = *it, s = lineNum[t];
-                if(s >= 0 && !lineTag[s])
-                    lineTag[s] = true;
-            }
-
-            Mat tmp = Mat::zeros(img.size(), CV_8UC3);
-            drawMSERs(tmp, &bs, true, &img, true);
-            char buf[100]; sprintf(buf, "out1/%s.%d.correct.jpg", argv[1], step);
-            imwrite(buf, tmp);
-        }
-
-        // drawClusters(segmentation, &regions, &final_clusters);
-        cout<<"store final regions"<<endl;
-        {
-            set<int> res;
-            for(int i=0; i<final_clusters.size(); i++){
-                for(int j=0; j<final_clusters[i].size(); j++){
-                    res.insert(final_clusters[i][j]);
-                }
-            }
-            for(set<int>::iterator it=res.begin(); it!=res.end(); it++){
-                int i=*it;
-                final_regions.push_back(regions[i]);
-            }
-
-            ///// getback dots
-            vector<int> hors;
-            for(int i = 0; i<final_regions.size(); i++){
-                if(isHorizonStroke(final_regions[i], region_boost)){
-                    hors.push_back(i);
-                    for(int j = 0; j<dots.size(); j++){
-                        if(isI(dots[j], final_regions[i])){
-                            final_regions.push_back(dots[j]);
-                        }
-                    }
-                }
-            }
-            {
-                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
-                fillRegions(tmp, final_regions, hors);
-                sprintf(buf, "out1/%s.%d.hors.png", argv[1], step);
-                imwrite(buf, tmp);
-            }
-
-            if( step == 1) mid=final_regions.size()-1;
-        }
-        cout<<"store line regions"<<endl;
-        {
-            set<int>  ls;
-            for(int i=0; i<final_lines.size(); i++){
-                for(int j=0; j<final_lines[i].size(); j++){
-                    ls.insert(final_lines[i][j]);
-                }
-            }
-            for(set<int>::iterator it=ls.begin(); it!=ls.end(); it++){
-                int i=*it;
-                assert(i>=0 && i<N);
-                line_regions.push_back(regions.at(i));
-            }
-            final_lines.clear();
-        }
-
-        if (step == 2)
-        {
-            vector<int> res;
-            unique(final_regions, mid);
 //            {
 //                Mat tmp = Mat::zeros(img.size(), CV_8UC1);
-//                fillRegions(tmp, final_regions, res);
-//                //cvtColor(tmp, tmp, CV_BGR2GRAY);
-//                //threshold(tmp,tmp,1,255,CV_THRESH_BINARY);
-//                char buf[100];
-//                sprintf(buf, "out1/%s.out.png", argv[1]);
+//                fillRegions(tmp, regions);
+//                char buf[100]; sprintf(buf, "out1/%s.%d.%d.mser--.jpg", argv[1], step, iii);
 //                imwrite(buf, tmp);
 //            }
 
 
-            cout<<"paint line regions"<<endl;
+            //t = cvGetTickCount() - t;
+            //cout << "Regions filled in " << t/((double)cvGetTickFrequency()*1000.) << " ms." << endl;
+            //t = (double)cvGetTickCount();
+
+            double max_stroke = 0;
+            vector<Region> erased;
+            for (int i=regions.size()-1; i>=0; i--)
+            {
+                Region &r=regions.at(i);
+                //|| (r.bbox_.width <=1)
+                if ( (r.stroke_std_/r.stroke_mean_ > 0.8) || (r.num_holes_>3)  || (r.bbox_.height <=2) || r.area_ <=4
+                     || (r.bbox_.width > 8.5*r.bbox_.height)  ){//|| r.stroke_mean_>0.3*r.bbox_.height
+                    erased.push_back(r);
+                    regions.erase(regions.begin()+i);
+                }
+                else
+                    max_stroke = max(max_stroke, regions[i].stroke_mean_);
+            }
+            IFOPT{
+                Mat tmp = Mat::zeros(img.size(), CV_8UC3);
+                drawMSERs(tmp, &erased, true, &img, true);
+                char buf[100]; sprintf(buf, "out1/%s.%d.erased.jpg", argv[1], step);
+                imwrite(buf, tmp);
+            }
+            IFOPT{
+                Mat tmp = Mat::zeros(img.size(), CV_8UC3);
+                drawMSERs(tmp, &regions, true, &img, true);
+                char buf[100]; sprintf(buf, "out1/%s.%d.mser.jpg", argv[1], step);
+                imwrite(buf, tmp);
+            }
+            /////////
+            cout<<"calculate graph"<<endl;
+            int N = regions.size();
+
+            vector<vector<float> > graph(N, vector<float>(N, 0));
+            vector<vector<bool> > sameline(N, vector<bool>(N, false));
+            {
+                for (int i=0; i<N; i++){
+                    graph[i][i]=100;
+                    for(int j=i+1; j<N; j++){
+                        graph[i][j]=graph[j][i]=dist(regions[i], regions[j]);
+                        sameline[i][j]=sameline[j][i]=inSameLine(regions[i], regions[j]);
+                    }
+                }
+            }
+
+            cout<<"graph calculated"<<endl;
+
+            vector<vector<int> > final_clusters;
+            vector<vector<int> > blocks;
+            vector<bool> blockTag;
+            {
+                //divide into connected tree
+                float thres=25;
+                vector<bool> vis(N, false);
+                for(int i=0; i<N; i++){
+                    if(!vis[i]){
+                        vector<int> tmp;
+                        dfs(graph, thres, tmp, i, vis);
+                        blocks.push_back(tmp);
+                    }
+                }
+                IFOPT{
+                    Mat tmp = Mat::zeros(img.size(), CV_8UC3);
+                    drawClusters(tmp, &regions, &blocks);
+                    char buf[100];
+                    sprintf(buf, "out1/%s.%d.block.jpg", argv[1], step);
+                    imwrite(buf, tmp);
+                }
+
+                blockTag.resize(blocks.size(), false);
+            }
+            ////////////////////////////////////////////////////////////
+            vector<vector<int> > lines;
+            vector<int> lineNum(N, -1);
+            {
+                int dim=2;
+                t_float *data = (t_float*)malloc(dim*N * sizeof(t_float));
+
+                for(int i=0; i< blocks.size(); i++){
+                    //if(blockTag[i]) continue;
+                    cutToLines(sameline, blocks[i], lines);
+                }
+
+                IFOPT{
+                    Mat tmp = Mat::zeros(img.size(), CV_8UC3);
+                    drawClusters(tmp, &regions, &lines);
+                    char buf[100]; sprintf(buf, "out1/%s.%d.lines0.jpg", argv[1], step);
+                    imwrite(buf, tmp);
+                }
+
+                vector<vector<int> > srt;
+                vector<vector<int> > rrt;
+                for(int i=0; i<lines.size(); i++){
+                    vector<int> &line = lines.at(i);
+                    for(int j = 0; j < line.size(); j++){
+                        lineNum[line[j]] = i;
+                    }
+                    //cout<<"group "<<j<<":"<<endl;
+                    int n = line.size();
+                    cout<<"line"<<i<<" : n="<< line.size()<<endl ;
+                    if(n>1)
+                    {
+                        IFOPT{
+                            Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+                            fillRegions(tmp, regions, line);
+                            char buf[100]; sprintf(buf, "out1/%s.%d.%d.%d.group.png",  argv[1], iii, step, i);
+                            imwrite(buf, tmp);
+                        }
+
+                        float f = groupSim(graph,  line);
+                        float g = groupVar(regions, line);
+                        float h= group_boost(&line, &regions);
+                        bool k= groupSco(region_boost, regions, line);
+
+                        if(!groupLs(regions, line, i)) continue;
+
+                        g/=n;
+                        if(n<2 && g>0.005) continue;
+                        if(f>=200 && g<=0.01 && h>=0.1 || f>120 && g<=0.01
+                                || f>150 && g<=0.02 || f>400 && g<0.01 || h>DECISION_THRESHOLD_SF*2/3 || g<0.02 && k){
+                            cout<<"#line"<<i<<" : n="<< line.size() <<", f="<<f<<", g="<<g<<", h="<<h<<", k="<<k<<endl;
+                            srt.push_back(line);
+                            final_clusters.push_back(line);
+                            //final_lines.push_back(line);
+                        }
+                        else{
+                            cout<<"line"<<i<<" : n="<< line.size() <<", f="<<f<<", g="<<g<<", h="<<h<<", k="<<k<<endl;
+                            rrt.push_back(line);
+                        }
+
+                    }
+                }
+                IFOPT{
+                    Mat tmp = Mat::zeros(img.size(), CV_8UC3);
+                    drawClusters(tmp, &regions, &rrt);
+                    sprintf(buf, "out1/%s.%d.lines-1.jpg", argv[1], step);
+                    imwrite(buf, tmp);
+                }
+            }
+
+            ///////////////////////////////////////////////////////////////
+//            {
+//                set<int> rs;
+//                for(int i=0; i<final_clusters.size(); i++){
+//                    for(int j=0; j<final_clusters[i].size(); j++){
+//                        rs.insert(final_clusters[i][j]);
+//                    }
+//                }
+//                // cout<<"after insert"<<endl;
+//                vector<Region> bs;
+//                vector<int> crt;
+//                for(int j = 0; j < N; j++){
+//                    if(!rs.count(j)){
+//                        float score=0;
+//                        for(set<int>::iterator it=rs.begin(); it!=rs.end(); it++){
+//                            {
+//                                if(graph[*it][j] > 40)
+//                                    score += graph[*it][j];
+//                            }
+//                        }
+//                        if(score>600) bs.push_back(regions[j]), crt.push_back(j), rs.insert(j);
+//                    }
+//                }
+//                ////
+//                final_clusters.push_back(crt);
+//                IFOPT{
+//                    cout<<"as crt is chosen..."<<endl;
+//                    Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+//                    fillRegions(tmp, regions, crt);
+//                    sprintf(buf, "out1/crt.png");
+//                    imwrite(buf, tmp);
+//                }
+
+//                /////////
+//                //final_clusters.clear();
+//                for(set<int>::iterator it = rs.begin(); it != rs.end(); it++){
+//                    int t = *it, s = lineNum[t];
+//                    if(s >= 0 && !lineTag[s])
+//                        lineTag[s] = true;
+//                }
+//            }
+
+            ///////////////////////////////////////////////////////////////
+            // drawClusters(segmentation, &regions, &final_clusters);
+            cout<<"store final regions"<<endl;
+            {
+                set<int> res;
+                for(int i=0; i<final_clusters.size(); i++){
+                    for(int j=0; j<final_clusters[i].size(); j++){
+                        res.insert(final_clusters[i][j]);
+                    }
+                }
+                for(set<int>::iterator it=res.begin(); it!=res.end(); it++){
+                    int i=*it;
+                    final_regions.push_back(regions[i]);
+                    line_sizes.push_back(lines[lineNum[i]].size());
+                }
+            }
+
             {
                 Mat tmp = Mat::zeros(img.size(), CV_8UC1);
-                cout<<"size of line regions:"<<line_regions.size()<<endl;
-                fillRegions(tmp, line_regions);
-                //cvtColor(tmp, tmp, CV_BGR2GRAY);
-                //threshold(tmp,tmp,1,255,CV_THRESH_BINARY);
+                fillRegions(tmp, final_regions);
                 char buf[100];
-                sprintf(buf, "out1/%s.lines1.png", argv[1]);
+                sprintf(buf, "out1/%s.%d.%d.out.png", argv[1], step, iii);
                 imwrite(buf, tmp);
-                line_regions.clear();
-            }
-            cout<<"output rects"<<endl;
-            for(int i=0; i<rects.size(); i++){
-                Rect &r = rects[i];
-                printf("%d, %d, %d, %d\n", r.x, r.y, r.x + r.width, r.y + r.height);
             }
 
+            int offset= valid_regions[step-1].size();
+            //valid_regions[step-1].append(final_regions);
+            APPENDVEC(valid_regions[step-1], final_regions);
+            vector<bool> tmp(final_regions.size(), false);
+            APPENDVEC(valid_num[step-1], tmp);
+            APPENDVEC(valid_lcs[step-1], line_sizes);
+            //装入背包
+            for(int i = 0; i< final_regions.size(); i++){
+                int k ,c;
+                if(!overlaps(final_regions[i], pixels[step-1], valid_num[step-1], k, c)) {
+                    cout<<"the region collapse with previous ones"<<endl;
+                    continue;
+                }
+                if(k>=0) {
+                    float s= c/(float)valid_regions[step-1][k].area_,
+                            t=final_regions[i].area_/(float)valid_regions[step-1][k].area_;
+                    if(t<1.5) continue;  // not a parent of k
+                    valid_num[step-1][k] = false;
+                }
+                cout<<"the region is valid"<<endl;
+                valid_num[step-1][i+offset]=true;
+                for(int j = 0; j<final_regions[i].pixels_.size(); j++)
+                    pixels[step-1][final_regions[i].pixels_[j]]=i + offset;
+            }
         }
-        regions.clear();
-        //t_tot = cvGetTickCount() - t_tot;
-        //cout << " Total processing for one frame " << t_tot/((double)cvGetTickFrequency()*1000.) << " ms." << endl;
+
+        //////////////////////////////////////////
+        {
+            vector<int> tv;
+            for(int i = 0; i<valid_regions[step-1].size(); i++)
+                if(valid_num[step-1][i]) tv.push_back(i);
+            Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+            fillRegions(tmp, valid_regions[step-1], tv);
+            char buf[100];
+            sprintf(buf, "out1/%s.%d.out.png", argv[1], step);
+            imwrite(buf, tmp);
+        }
+    }
+    ////////////////////////////////////////////
+    {
+        ///// getback dots
+        vector<Region> is;
+
+        for(int step =1; step<3; step++){
+            for(int i = 0; i<valid_regions[step-1].size(); i++){
+                if(!valid_num[step-1][i]) continue;
+                if(isHorizonStroke(valid_regions[step-1][i], region_boost)){
+                    for(int j = 0; j<dots[step-1].size(); j++){
+                        if(isI(dots[step-1][j], valid_regions[step-1][i])){
+                            ff_dots.push_back(dots[step-1][j]);
+                            is.push_back(dots[step-1][j]),
+                            is.push_back(valid_regions[step-1][i]);
+                        }
+                    }
+                }
+            }
+        }
+        IFOPT{
+            Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+            fillRegions(tmp, is);
+            sprintf(buf, "out1/%s.is.png", argv[1]);
+            imwrite(buf, tmp);
+        }
+        {
+            Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+            fillRegions(tmp, ff_dots);
+            sprintf(buf, "out1/%s.ds.png", argv[1]);
+            imwrite(buf, tmp);
+        }
+    }
+    //postUnique(ff_regions[step-1]);
+
+    ///////////////////////////////////
+    //merge
+    for(int i = 0; i<valid_num[0].size(); i++){
+        if(!valid_num[0][i]) continue;
+        Region &s = valid_regions[0][i];
+        int j = 0; for( j = 0; j<valid_num[1].size(); j++){
+            if(!valid_num[1][j]) continue;
+            Region & t=valid_regions[1][j];
+            if(overlay(s, t) && valid_lcs[0][i] <valid_lcs[1][j]) break;
+        }
+        if(j==valid_num[1].size()){
+            ff_regions.push_back(valid_regions[0][i]);
+        }
+    }
+    for(int i = 0; i<valid_num[1].size(); i++){
+        if(!valid_num[1][i]) continue;
+        Region &s = valid_regions[1][i];
+        int j = 0; for( j = 0; j<valid_num[0].size(); j++){
+            if(!valid_num[0][j]) continue;
+            Region & t=valid_regions[0][j];
+            if(overlay(s, t) && valid_lcs[1][i] <valid_lcs[0][j]) break;
+        }
+        if(j==valid_num[0].size()){
+            ff_regions.push_back(valid_regions[1][i]);
+        }
     }
 
-    for(int i = 0; i< final_regions.size(); i++){
-        if(overlaps(final_regions[i], pixels)) continue;
-        ff_regions.push_back(final_regions[i]);
-        for(int j = 0; j<final_regions[i].pixels_.size(); j++)
-            pixels.insert(final_regions[i].pixels_[j]);
+    APPENDVEC(ff_regions, ff_dots);
+    {
+        Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+        fillRegions(tmp, ff_regions);
+        char buf[100];
+        sprintf(buf, "out1/%s.out.png", argv[1]);
+        imwrite(buf, tmp);
     }
-}
-
-{
-    Mat tmp = Mat::zeros(img.size(), CV_8UC1);
-    fillRegions(tmp, ff_regions);
-    char buf[100];
-    sprintf(buf, "out1/%s.out.png", argv[1]);
-    imwrite(buf, tmp);
-}
 
 }
-

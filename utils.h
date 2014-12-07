@@ -413,13 +413,11 @@ bool isI(Region &s,Region t){//s is dot
   //stroke width ratio
   if(w1/w2>1.6||w2/w1>10) return false;
   //height ratio
-  if(h2/h1<1.7) return false;
-  float x1=s.bbox_x1_+w1/2;//,y1=s.bbox_y1_+h1/2;
-  float x2=t.bbox_x1_+w2/2;//,y2=t.bbox_y1_+h2/2;
+  if(h2/h1<1.5) return false;
   //distance
-  if(abs(x1-x2)>w2*1.2
-     ||s.bbox_y1_+h1*2/3 >t.bbox_y1_
-     ||t.bbox_y1_-s.bbox_y2_>max(h1,h2))
+  if(s.bbox_x1_>t.bbox_x2_ + w2/2.0 || s.bbox_x2_ <t.bbox_x1_ - w2/2.0
+     ||s.bbox_y2_- t.bbox_y1_ > h1/3.0
+     ||t.bbox_y1_ -s.bbox_y2_>  h2)
     return false;
   // cout<<"yes. is I"<<endl;
   return true;
@@ -440,16 +438,15 @@ void genDimVector(const Mat &co_occurrence_matrix,t_float* D){
 
 //judge for I
 bool isDotStroke(Region &s){
-    if(s.area_<10) return true;
   if(s.num_holes_>0) return false;
-  return true;
+  if((s.bbox_.width<=3 && s.bbox_.height <=3) || s.area_ <=6 ) return true;
   float w1=s.bbox_.width,h1=s.bbox_.height;
-  if(s.area_<7) return true;
   //shape
   if(w1/h1>3||h1/w1>3) return false;
+
   //area
   float xl = pow(w1*w1+h1*h1, 0.5)/2;
-  if(s.area_<3.14*0.5*xl*xl) return false;
+  if(s.area_<3.14*0.66*xl*xl) return false;
   //周长<4tr >=2tr
   // if(perimeterR(s)>13) return false;
   // cout<<"dotstroke:w:"<<w1<<" h:"<<h1<<" area:"<<s.area_<<endl;
@@ -504,10 +501,17 @@ void searchIJ(Mat &img,vector<Region> &regions, RegionClassifier &region_boost )
     }
 }
 
+bool overlay(Region &a, Region &b){
+    int x1 = max(a.bbox_x1_, b.bbox_x1_), x2 = min(a.bbox_x2_, b.bbox_x2_),
+            y1= max(a.bbox_y1_, b.bbox_y1_), y2 = min(a.bbox_y2_, b.bbox_y2_);
+    float mw = min(a.bbox_.width, b.bbox_.width), mh = min(a.bbox_.height, b.bbox_.height);
+    if(x1>x2+mw/2.0 && y1>y2+mh/2.0) return true;
+}
+
 bool contains(Region &a, Region &b){
     Rect &s=a.bbox_, &t=b.bbox_;
-    return s.x<=t.x && s.y<=t.y && s.x+s.width>=t.x+t.width &&
-            s.y+s.height>=t.y+t.height;
+    return s.x<=t.x+t.width/2.0 && s.y<=t.y+t.height/2.0 && s.x+s.width>=t.x+t.width/2.0 &&
+            s.y+s.height>=t.y+t.height/2.0;
 }
 void unique(vector<Region>& regions, int mid){
     int n=regions.size();

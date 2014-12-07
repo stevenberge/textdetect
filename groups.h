@@ -89,7 +89,8 @@ bool groupLs(vector<Region> &regions, vector<int> &group, int idx){
         hg_var = pow(hg_var, 0.5);
         wd_var = pow(wd_var, 0.5);
         cout<<"hg_var:"<<hg_var<<" wd_var:"<<wd_var<<endl;
-        if(hg_var>0.4) return false;
+        //////////////i don't know if this is good:if(hg_var>0.4) return false;
+        if(hg_var>0.46) return false;
         if(wd_var>1) return false;
     }
     return true;
