@@ -227,7 +227,8 @@ int main( int argc, char** argv )
     all_segmentations = Mat::zeros(240,320*11,CV_8UC3);
 
    // int thrs[6] = {75, 34, 30, 25, 16, 10};
-     int thrs[5] = {50, 34, 30, 18, 13};
+     // int thrs[5] = {50, 34, 30, 18, 13};
+     int thrs[5] = { 30, 18};
     vector<Region> ff_regions;
     vector<Region> ff_dots;
     list<Region> dots[2];
@@ -279,7 +280,7 @@ int main( int argc, char** argv )
         if (step == 2)
             grey = 255-grey;
 
-        for(int iii = 0; iii<4; iii++){
+        for(int iii = 0; iii<2; iii++){
             ::MSER mser8(true, thrs[iii],0.00008,0.08,0.5,0.33);
 
             vector<Region> regions;
