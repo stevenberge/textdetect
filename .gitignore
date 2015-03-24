@@ -5,8 +5,11 @@ a.out
 segs
 test-textloc
 CMakeCache.txt
-CMakeFiles
+CMakeFiles/
 cmake_install.cmake
 *.jpg
 *.png
 test
+mser
+textdetect
+Makefile
