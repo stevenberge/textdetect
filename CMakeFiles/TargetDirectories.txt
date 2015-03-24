@@ -1,0 +1,2 @@
+/home/jack/textdetect-master/CMakeFiles/mser.dir
+/home/jack/textdetect-master/CMakeFiles/textdetect.dir
