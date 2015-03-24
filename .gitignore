@@ -1,0 +1,12 @@
+tags
+out
+out1
+a.out
+segs
+test-textloc
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
+*.jpg
+*.png
+test
