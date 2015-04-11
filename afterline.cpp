@@ -766,10 +766,21 @@ int main( int argc, char** argv )
     }
     //postUnique(ff_regions[step-1]);
 
+    /////
+    // erase invalid regions from ..
+    // valid_regions -> valid_regions
+    for(int step = 0; step<2; step++){
+      vector<Region> tmp;
+      for(int i = 0; i<valid_num[step].size(); i++){
+        if(valid_num[step][i]) 
+          tmp.push_back(valid_regions[step][i]);
+      }
+      valid_regions[step] = tmp;
+    }
 
     ///////
     // valid_regions -> lines
-    vector<vector<int> > valid_lines[2];
+    vector<vector<int> > valid_lines[2];// store lines
     vector<int> valid_line_cnt[2]; // region number -> line region count
     for(int step = 0; step<2; step++){
       int N = valid_regions[step].size();
