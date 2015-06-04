@@ -296,7 +296,7 @@ int main( int argc, char** argv )
 
 
         int last_fr_num = 1;
-        for(int iii = 0; iii<4; iii++){
+        for(int iii = 0; iii<=4; iii++){
 
             ::MSER mser8(true, thrs[iii],0.00008,0.08,0.5,0.33);
 
@@ -589,54 +589,9 @@ int main( int argc, char** argv )
                 }
             }
 
-            ///////////////////////////////////////////////////////////////
-//            {
-//                set<int> rs;
-//                for(int i=0; i<final_clusters.size(); i++){
-//                    for(int j=0; j<final_clusters[i].size(); j++){
-//                        rs.insert(final_clusters[i][j]);
-//                    }
-//                }
-//                // cout<<"after insert"<<endl;
-//                vector<Region> bs;
-//                vector<int> crt;
-//                for(int j = 0; j < N; j++){
-//                    if(!rs.count(j)){
-//                        float score=0;
-//                        for(set<int>::iterator it=rs.begin(); it!=rs.end(); it++){
-//                            {
-//                                if(graph[*it][j] > 40)
-//                                    score += graph[*it][j];
-//                            }
-//                        }
-//                        if(score>600) bs.push_back(regions[j]), crt.push_back(j), rs.insert(j);
-//                    }
-//                }
-//                ////
-//                final_clusters.push_back(crt);
-//                IFOPT{
-//                    cout<<"as crt is chosen..."<<endl;
-//                    Mat tmp = Mat::zeros(img.size(), CV_8UC1);
-//                    fillRegions(tmp, regions, crt);
-//                    sprintf(buf, "out1/crt.png");
-//                    imwrite(buf, tmp);
-//                }
-
-//                /////////
-//                //final_clusters.clear();
-//                for(set<int>::iterator it = rs.begin(); it != rs.end(); it++){
-//                    int t = *it, s = lineNum[t];
-//                    if(s >= 0 && !lineTag[s])
-//                        lineTag[s] = true;
-//                }
-//            }
-
-            ///////////////////////////////////////////////////////////////
-            // drawClusters(segmentation, &regions, &final_clusters);
 
             // final_clusters, regions -> final_regions
-
-
+            
             cout<<"store final regions"<<endl;
             {
                 set<int> res;
@@ -749,13 +704,13 @@ int main( int argc, char** argv )
             }
         }
 
-        IFOPT{
+        {
             Mat tmp = Mat::zeros(img.size(), CV_8UC1);
             fillRegions(tmp, is);
             sprintf(buf, "out1/%s.is.png", filename);
             imwrite(buf, tmp);
         }
-        IFOPT{
+        {
             Mat tmp = Mat::zeros(img.size(), CV_8UC1);
             fillRegions(tmp, ff_dots);
             sprintf(buf, "out1/%s.ds.png", filename);
@@ -845,9 +800,20 @@ int main( int argc, char** argv )
         }
     }
 
+    {
+        Mat tmp = Mat::zeros(img.size(), CV_8UC1);
+        fillRegions(tmp, ff_regions);
+        char buf[100];
+
+        sprintf(buf, "out1/%s.out0.png", filename);
+
+
+        imwrite(buf, tmp);
+    }
+
     for(int i = 0; i<ff_dots.size(); i++){
         int j = 0; for(; j<ff_regions.size(); j++){
-            if(overlay(ff_regions[j], ff_dots[i])) break;
+            if(overlay(ff_dots[i], ff_regions[j])) break;
         }
         if(j==ff_regions.size()) ff_regions.push_back(ff_dots[i]);
     }

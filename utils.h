@@ -514,7 +514,7 @@ bool overlay(Region &a, Region &b){
     int x1 = max(a.bbox_x1_, b.bbox_x1_), x2 = min(a.bbox_x2_, b.bbox_x2_),
             y1= max(a.bbox_y1_, b.bbox_y1_), y2 = min(a.bbox_y2_, b.bbox_y2_);
     float mw = min(a.bbox_.width, b.bbox_.width), mh = min(a.bbox_.height, b.bbox_.height);
-    if(x1<x2-mw/3.0 && y1<y2-mh/3.0) return true;
+    if(x1<x2 && y1>y2 && y1<y2+b.bbox_.height) return true;
     return false;
 //    //assume a.pixels[] and b.pixels[] are sorted before
 //    int l = 0, r= 0;
